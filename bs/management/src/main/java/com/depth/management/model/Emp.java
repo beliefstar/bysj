@@ -37,10 +37,6 @@ public class Emp extends BaseEntity {
      */
     private Date joinTime;
     /**
-     * 部门ID
-     */
-    private Long departmentId;
-    /**
      * 民族
      */
     private String nation;
@@ -122,14 +118,6 @@ public class Emp extends BaseEntity {
 
     public void setJoinTime(Date joinTime) {
         this.joinTime = joinTime;
-    }
-
-    public Long getDepartmentId() {
-        return departmentId;
-    }
-
-    public void setDepartmentId(Long departmentId) {
-        this.departmentId = departmentId;
     }
 
     public String getNation() {
@@ -220,7 +208,6 @@ public class Emp extends BaseEntity {
                 ", age=" + age +
                 ", gender='" + gender + '\'' +
                 ", joinTime=" + joinTime +
-                ", departmentId=" + departmentId +
                 ", nation='" + nation + '\'' +
                 ", politics='" + politics + '\'' +
                 ", address='" + address + '\'' +

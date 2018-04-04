@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableTransactionManagement
-@MapperScan(basePackages = "com.depth.management.mapper")
+@MapperScan("com.depth.management.mapper")
 public class ManagementApplication {
 
 	public static void main(String[] args) {
