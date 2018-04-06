@@ -23,9 +23,16 @@ spring:
     pool-prepared-statements: true
     max-pool-prepared-statement-per-connection-size: 20
     # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
-    filters: stat,wall,log4j
+    filters: stat
 mybatis:
   type-aliases-package: com.depth.management.model
-  mapperLocations: classpath:mapper/*.xml
-  config-location: classpath:mybatis-config.xml
+  mapperLocations: mapper/*.xml
+  config-location: mybatis-config.xml
+logging:
+  level:
+    com:
+      depth:
+        management:
+          mapper: debug
+  file: logs/management.log
 

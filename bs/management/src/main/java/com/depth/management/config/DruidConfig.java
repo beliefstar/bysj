@@ -97,7 +97,7 @@ public class DruidConfig {
 
     @Bean
     @Primary
-    public DataSourceTransactionManager transactionManager() {
-        return new DataSourceTransactionManager(dataSource());
+    public DataSourceTransactionManager transactionManager(DataSource source) {
+        return new DataSourceTransactionManager(source);
     }
 }
