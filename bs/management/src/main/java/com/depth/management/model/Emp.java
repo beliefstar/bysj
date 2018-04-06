@@ -14,6 +14,7 @@ import java.util.Date;
 @Table(name = "emp")
 public class Emp extends BaseEntity {
     private static final long serialVersionUID = 4046419998421780519L;
+    public static final String SESSION_NAME = "_emp";
     /**
      * 工号
      */
