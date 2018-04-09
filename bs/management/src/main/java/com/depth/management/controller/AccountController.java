@@ -1,9 +1,10 @@
 package com.depth.management.controller;
 
-import com.depth.management.common.Result;
+import com.depth.management.common.vo.Result;
 import com.depth.management.model.Account;
-import com.depth.management.model.Emp;
 import com.depth.management.service.AccountService;
+import com.depth.management.service.EmpService;
+import com.depth.management.session.LoginInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,13 +15,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/Account")
+@RequestMapping("/account")
 public class AccountController {
     private final AccountService accountService;
+    private final EmpService empService;
 
     @Autowired
-    public AccountController(AccountService accountService) {
+    public AccountController(AccountService accountService, EmpService empService) {
         this.accountService = accountService;
+        this.empService = empService;
     }
 
     @GetMapping("/login")
@@ -35,28 +38,26 @@ public class AccountController {
 
     @PostMapping("/login")
     @ResponseBody
-    public Result login(Account account) {
+    public Result login(String username, String password) {
         Result result = new Result();
-        accountService.login(account);
+        accountService.login(username, password);
         return result;
     }
 
     @PostMapping("/register")
     @ResponseBody
-    public Result register(Account account, HttpSession session) {
+    public Result register(Account account, LoginInfo loginInfo) {
         Result result = new Result();
-        Emp emp = (Emp) session.getAttribute(Emp.SESSION_NAME);
-        accountService.register(account, emp.getName());
+        accountService.register(account, loginInfo.getEmp().getName());
         return result;
     }
 
     @PostMapping("/modifyPwd")
     @ResponseBody
-    public Result modifyPwd(Account account, String newPwd, HttpSession session) {
+    public Result modifyPwd(Account account, String newPwd, LoginInfo loginInfo, HttpSession session) {
         Result result = new Result();
-        Emp emp = (Emp) session.getAttribute(Emp.SESSION_NAME);
-        accountService.modifyPwd(account, newPwd, emp.getName());
-        session.setAttribute(Emp.SESSION_NAME, null);
+        accountService.modifyPwd(account, newPwd, loginInfo.getEmp().getName());
+        session.invalidate();
         return result;
     }
 }

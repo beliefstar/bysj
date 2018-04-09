@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.depth.management.mapper.SysObjectMapper">
+
+    <select id="findEmpPermissions" resultType="string">
+        SELECT m.permission
+        FROM sys_role_emp re,sys_role_permission rp, sys_permission m
+        WHERE re.emp_id=#{empId} AND re.role_id=rp.role_id AND rp.permission_id=m.id
+    </select>
+
+    <select id="findEmpModule" resultType="sysObject">
+        SELECT m.*
+        FROM sys_role_emp re,sys_role_permission rp, sys_permission m
+        WHERE re.emp_id=#{empId} AND re.role_id=rp.role_id AND rp.permission_id=m.id
+    </select>
+</mapper>

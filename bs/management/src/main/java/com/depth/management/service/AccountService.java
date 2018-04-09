@@ -4,7 +4,7 @@ import com.depth.management.model.Account;
 
 public interface AccountService {
 
-    void login(Account account);
+    void login(String username, String password);
 
     void register(Account account, String operInfo);
 

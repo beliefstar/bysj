@@ -14,13 +14,12 @@ import java.util.Date;
 @Table(name = "emp")
 public class Emp extends BaseEntity {
     private static final long serialVersionUID = 4046419998421780519L;
-    public static final String SESSION_NAME = "_emp";
     /**
      * 工号
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long empId;
+    private Long id;
     /**
      * 姓名
      */
@@ -81,12 +80,12 @@ public class Emp extends BaseEntity {
     public Emp() {
     }
 
-    public Long getEmpId() {
-        return empId;
+    public Long getId() {
+        return id;
     }
 
-    public void setEmpId(Long empId) {
-        this.empId = empId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -204,7 +203,7 @@ public class Emp extends BaseEntity {
     @Override
     public String toString() {
         return "Emp{" +
-                "empId=" + empId +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", age=" + age +
                 ", gender='" + gender + '\'' +

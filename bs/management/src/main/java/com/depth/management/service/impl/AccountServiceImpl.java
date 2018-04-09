@@ -3,10 +3,15 @@ package com.depth.management.service.impl;
 import com.depth.management.common.exception.AccountException;
 import com.depth.management.common.exception.ServiceException;
 import com.depth.management.mapper.AccountMapper;
-import com.depth.management.mapper.EmpMapper;
 import com.depth.management.model.Account;
 import com.depth.management.model.Emp;
 import com.depth.management.service.AccountService;
+import com.depth.management.session.LoginInfo;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,22 +34,18 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void login(Account account) {
-        Account temp = new Account();
+    public void login(String username, String password) {
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isAuthenticated()) return;
+        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+
         try {
-            temp.setUsername(account.getUsername());
-            temp = accountMapper.selectOne(temp);
-            if (temp != null) {
-                String currentPwd = account.getSalt() + account.getPassword();
-                currentPwd = DigestUtils.md5DigestAsHex(currentPwd.getBytes("UTF-8"));
-                if (temp.getPassword().equals(currentPwd)) {
-                    return;
-                }
-            }
-            throw new AccountException("账号或密码错误!");
-        } catch (Exception e) {
+            subject.login(token);
+        } catch (IncorrectCredentialsException ice) {
+            throw new ServiceException("用户名或密码错误");
+        } catch (AuthenticationException e) {
             e.printStackTrace();
-            throw new ServiceException("服务器开了一个小差，请稍后再试!");
+            throw new ServiceException("认证失败");
         }
     }
 
@@ -83,7 +84,16 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public void modifyPwd(Account account, String newPwd, String operInfo) {
         try {
-            login(account);
+            Account temp = new Account();
+            temp.setUsername(account.getUsername());
+
+            temp = accountMapper.selectOne(temp);
+
+            String currentPwd = account.getSalt() + account.getPassword();
+            currentPwd = DigestUtils.md5DigestAsHex(currentPwd.getBytes("UTF-8"));
+            if (!temp.getPassword().equals(currentPwd)) {
+                throw new AccountException("旧密码错误!");
+            }
 
             generatePwd(account);
 
@@ -92,8 +102,6 @@ public class AccountServiceImpl implements AccountService {
             account.setUpdateUser(operInfo);
 
             accountMapper.updateByPrimaryKeySelective(account);
-        } catch (AccountException e) {
-            throw new AccountException("旧密码错误!");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             throw new ServiceException("服务器繁忙！");

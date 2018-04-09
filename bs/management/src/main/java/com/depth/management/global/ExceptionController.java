@@ -1,6 +1,6 @@
 package com.depth.management.global;
 
-import com.depth.management.common.Result;
+import com.depth.management.common.vo.Result;
 import com.depth.management.common.exception.AccountException;
 import com.depth.management.common.exception.ServiceException;
 import org.springframework.web.bind.annotation.ControllerAdvice;

@@ -1,11 +1,13 @@
 package com.depth.management.service.impl;
 
+import com.depth.management.common.exception.ServiceException;
 import com.depth.management.mapper.EmpMapper;
 import com.depth.management.model.Emp;
 import com.depth.management.service.EmpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -19,6 +21,14 @@ public class EmpServiceImpl implements EmpService {
         this.empMapper = empMapper;
     }
 
+
+    @Override
+    public Emp findById(Long id) {
+        if (id == 0) {
+            throw new ServiceException("ID不可为空!");
+        }
+        return empMapper.selectByPrimaryKey(id);
+    }
 
     @Override
     public List<Emp> findAll() {
