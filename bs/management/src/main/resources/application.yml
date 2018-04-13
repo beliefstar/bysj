@@ -33,5 +33,5 @@ logging:
       depth:
         management:
           mapper: debug
-  file: logs/management.log
+#  file: logs/management.log
 

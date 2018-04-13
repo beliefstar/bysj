@@ -1,5 +1,6 @@
 package com.depth.management.service.impl;
 
+import com.depth.management.common.exception.ServiceException;
 import com.depth.management.mapper.SysObjectMapper;
 import com.depth.management.model.SysObject;
 import com.depth.management.service.SysObjectService;
@@ -20,6 +21,12 @@ public class SysObjectServiceImpl implements SysObjectService {
 
     @Override
     public List<SysObject> findModule(Long empId) {
-        return sysObjectMapper.findEmpModule(empId);
+        List<SysObject> module;
+        try {
+            module = sysObjectMapper.findEmpModule(empId);
+        } catch (Exception e) {
+            throw new ServiceException(e);
+        }
+        return module;
     }
 }
