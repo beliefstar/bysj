@@ -1,6 +1,6 @@
 package com.depth.management.config;
 
-import com.depth.management.global.AuthRealm;
+import com.depth.management.global.realm.AuthRealm;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;

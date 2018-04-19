@@ -1,4 +1,4 @@
-package com.depth.management.global;
+package com.depth.management.global.realm;
 
 import com.alibaba.druid.util.StringUtils;
 import com.depth.management.mapper.AccountMapper;
