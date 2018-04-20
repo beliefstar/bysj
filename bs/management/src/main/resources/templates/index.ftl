@@ -24,33 +24,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
   -->
   <link rel="stylesheet" href="dist/css/skins/skin-blue.min.css">
 
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <link rel="stylesheet" href="/css/main.css">
+
   <!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <!--<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>-->
+  <#--<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>-->
   <![endif]-->
 </head>
-<!--
-BODY TAG OPTIONS:
-=================
-Apply one or more of the following classes to get the
-desired effect
-|---------------------------------------------------------|
-| SKINS         | skin-blue                               |
-|               | skin-black                              |
-|               | skin-purple                             |
-|               | skin-yellow                             |
-|               | skin-red                                |
-|               | skin-green                              |
-|---------------------------------------------------------|
-|LAYOUT OPTIONS | fixed                                   |
-|               | layout-boxed                            |
-|               | layout-top-nav                          |
-|               | sidebar-collapse                        |
-|               | sidebar-mini                            |
-|---------------------------------------------------------|
--->
+
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
@@ -58,11 +39,11 @@ desired effect
   <header class="main-header">
 
     <!-- Logo -->
-    <a href="index.html" class="logo">
+    <a href="/index" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>A</b>LT</span>
+      <span class="logo-mini"><b>D</b>EP</span>Depth
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>Admin</b>LTE</span>
+      <span class="logo-lg"><b>Depth</b></span>
     </a>
 
     <!-- Header Navbar -->
@@ -206,10 +187,10 @@ desired effect
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="#" class="btn btn-default btn-flat">Profile</a>
+                  <a href="#" class="btn btn-default btn-flat">资料</a>
                 </div>
                 <div class="pull-right">
-                  <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                  <a href="/account/logout" class="btn btn-default btn-flat">退出</a>
                 </div>
               </li>
             </ul>
@@ -254,23 +235,28 @@ desired effect
 
       <!-- Sidebar Menu -->
       <ul class="sidebar-menu">
-        <li class="header">HEADER</li>
-        <!-- Optionally, you can add icons to the links -->
+        <li class="header">菜单 - MENU</li>
         <#list moduleList as item>
-          <li class="active">
-              <a href="#"><i class="fa fa-link"></i> <span>${item.name}</span></a>
+          <li <#if item.list?size gt 0>class="treeview"</#if>>
+              <a href="javascript:void(0);" onclick="showLab('${item.url!}', '${item.name}')">
+                  <i class="fa fa-th"></i>
+                  <span>${item.name}</span>
+                  <#if item.list?size gt 0>
+                  <i class="fa fa-angle-left pull-right"></i>
+                      <ul class="treeview-menu">
+                          <#list item.list as v>
+                              <li>
+                                  <a href="javascript:void(0);" onclick="showLab('${v.url}', '${item.name}', '${v.name}')">
+                                      <i class="fa fa-circle-o"></i>
+                                      ${v.name}
+                                  </a>
+                              </li>
+                          </#list>
+                      </ul>
+                  </#if>
+              </a>
           </li>
         </#list>
-        <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
-        <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-        <li class="treeview">
-          <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span> <i class="fa fa-angle-left pull-right"></i></a>
-          <ul class="treeview-menu">
-            <li><a href="#">Link in level 2</a></li>
-            <li><a href="#">Link in level 2</a></li>
-          </ul>
-        </li>
-
       </ul>
       <!-- /.sidebar-menu -->
     </section>
@@ -280,23 +266,22 @@ desired effect
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-        Page Header
-        <small>Optional description</small>
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-        <li class="active">Here</li>
-      </ol>
-    </section>
+      <section class="content-header">
+          <h1 id="content-header">
+              <small>Optional description</small>
+          </h1>
+          <ol class="breadcrumb">
+              <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+              <li class="active">Here</li>
+          </ol>
+      </section>
 
     <!-- Main content -->
-    <section class="content">
+      <section class="content" id="container-view">
 
-      <!-- Your Page Content Here -->
+          <!-- Your Page Content Here -->
 
-    </section>
+      </section>
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
@@ -382,24 +367,14 @@ desired effect
     </div>
   </aside>
   <!-- /.control-sidebar -->
-  <!-- Add the sidebar's background. This div must be placed
-       immediately after the control sidebar -->
   <div class="control-sidebar-bg"></div>
 </div>
-<!-- ./wrapper -->
 
-<!-- REQUIRED JS SCRIPTS -->
 
-<!-- jQuery 2.1.4 -->
 <script src="plugins/jQuery/jQuery-2.1.4.min.js"></script>
-<!-- Bootstrap 3.3.5 -->
 <script src="bootstrap/js/bootstrap.min.js"></script>
-<!-- AdminLTE App -->
 <script src="dist/js/app.min.js"></script>
+<script src="/js/index.js"></script>
 
-<!-- Optionally, you can add Slimscroll and FastClick plugins.
-     Both of these plugins are recommended to enhance the
-     user experience. Slimscroll is required when using the
-     fixed layout. -->
 </body>
 </html>

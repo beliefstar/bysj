@@ -1,11 +1,11 @@
 package com.depth.management.service;
 
-import com.depth.management.model.SysObject;
+import com.depth.management.common.vo.SysObjectTree;
 
 import java.util.List;
 
 public interface SysObjectService {
 
-    List<SysObject> findModule(Long empId);
+    List<SysObjectTree> findModule(Long empId);
 
 }

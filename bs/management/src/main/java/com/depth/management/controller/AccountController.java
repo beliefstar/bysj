@@ -61,4 +61,12 @@ public class AccountController {
         SecurityUtils.getSubject().logout();
         return result;
     }
+
+    @PostMapping("/checkEmail")
+    @ResponseBody
+    public Result checkEmail(String email) {
+        Result result = new Result();
+        empService.checkEmail(email);
+        return result;
+    }
 }

@@ -43,7 +43,6 @@ public class ShiroConfig {
         map.put("/login_assets/**", "anon");
         map.put("/plugins/**", "anon");
         map.put("/account/login", "anon");
-        map.put("/account/register", "anon");
         map.put("/account/logout", "logout");
         map.put("/**", "authc");
         bean.setFilterChainDefinitionMap(map);

@@ -1,0 +1,14 @@
+@keyframes loadContent {
+    from {
+        transform: translateX(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0px);
+        opacity: 1;
+    }
+}
+
+.load-content {
+    animation: loadContent 1s;
+}

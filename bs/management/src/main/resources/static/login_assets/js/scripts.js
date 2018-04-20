@@ -32,7 +32,6 @@ jQuery(document).ready(function() {
     	if (flag) return;
     	var url = $(this).attr("action");
     	var data = $(this).serialize();
-    	console.log(data);
     	$.post(url, data, function (rel) {
 			if (rel.status === 200) {
 				window.location.href = "/";

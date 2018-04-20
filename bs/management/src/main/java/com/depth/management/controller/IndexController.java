@@ -1,8 +1,7 @@
 package com.depth.management.controller;
 
-import com.depth.management.common.exception.ServiceException;
+import com.depth.management.common.vo.SysObjectTree;
 import com.depth.management.model.Emp;
-import com.depth.management.model.SysObject;
 import com.depth.management.service.SysObjectService;
 import com.depth.management.session.LoginInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +24,10 @@ public class IndexController {
     @GetMapping({"/", "/index"})
     public String index(ModelMap modelMap, LoginInfo loginInfo) {
         final Emp emp = loginInfo.getEmp();
-        try {
-            List<SysObject> module = sysObjectService.findModule(emp.getId());
 
-            modelMap.put("moduleList", module);
-        } catch (Exception e) {
-            throw new ServiceException(e);
-        }
+        List<SysObjectTree> module = sysObjectService.findModule(emp.getId());
+        modelMap.put("moduleList", module);
+
         return "index";
     }
 

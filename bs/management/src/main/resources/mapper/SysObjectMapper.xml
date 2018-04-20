@@ -8,7 +8,7 @@
         WHERE re.emp_id=#{empId} AND re.role_id=rp.role_id AND rp.permission_id=m.id
     </select>
 
-    <select id="findEmpModule" resultType="sysObject">
+    <select id="findEmpModule" resultType="com.depth.management.common.vo.SysObjectTree">
         SELECT m.*
         FROM sys_role_emp re,sys_role_permission rp, sys_permission m
         WHERE re.emp_id=#{empId} AND re.role_id=rp.role_id AND rp.permission_id=m.id

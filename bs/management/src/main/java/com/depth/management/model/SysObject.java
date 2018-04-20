@@ -5,29 +5,29 @@ import com.depth.management.common.BaseEntity;
 public class SysObject extends BaseEntity {
     private static final long serialVersionUID = -5332537693806118198L;
 
-    private int id;
-    private int parentId;
+    private Integer id;
+    private Integer parentId;
     private String name;
     private String url;
-    private int order;
+    private Integer order;
     private String permission;
 
     public SysObject() {
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getParentId() {
+    public Integer getParentId() {
         return parentId;
     }
 
-    public void setParentId(int parentId) {
+    public void setParentId(Integer parentId) {
         this.parentId = parentId;
     }
 
@@ -47,11 +47,11 @@ public class SysObject extends BaseEntity {
         this.url = url;
     }
 
-    public int getOrder() {
+    public Integer getOrder() {
         return order;
     }
 
-    public void setOrder(int order) {
+    public void setOrder(Integer order) {
         this.order = order;
     }
 

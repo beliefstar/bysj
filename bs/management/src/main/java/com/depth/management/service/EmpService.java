@@ -11,7 +11,7 @@ public interface EmpService {
 
     List<Emp> findAll();
 
-    Emp save(Emp emp);
+    Emp save(Emp emp, String opeUser);
 
     void login(String email, String password);
 

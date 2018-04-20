@@ -26,12 +26,15 @@ spring:
     filters: stat
 mybatis:
   type-aliases-package: com.depth.management.model
-  mapperLocations: classpath:mapper/*.xml
+  mapperLocations: "classpath:mapper/*.xml"
+  config-location: "classpath:mybatis-config.xml"
 logging:
   level:
     com:
       depth:
         management:
           mapper: debug
-#  file: logs/management.log
+server:
+  port: 8089
+#  file: logs/management.log\
 

@@ -10,6 +10,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,10 +50,19 @@ public class EmpServiceImpl implements EmpService {
 
     @Transactional
     @Override
-    public Emp save(Emp emp) {
+    public Emp save(Emp emp, String opeUser) {
+        Date date = new Date();
+        emp.setCreateTime(date);
+        emp.setCreateUser(opeUser);
+        emp.setUpdateTime(date);
+        emp.setUpdateUser(opeUser);
 
-        empMapper.insert(emp);
-
+        try {
+            empMapper.insertSelective(emp);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException("参数错误");
+        }
         return emp;
     }
 

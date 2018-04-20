@@ -2,7 +2,6 @@ package com.depth.management.common.vo;
 
 import com.depth.management.model.SysObject;
 
-import java.io.Serializable;
 import java.util.List;
 
 public class SysObjectTree extends SysObject {
@@ -13,7 +12,11 @@ public class SysObjectTree extends SysObject {
     public SysObjectTree() {
     }
 
-    public SysObjectTree(List<SysObjectTree> list) {
+    public List<SysObjectTree> getList() {
+        return list;
+    }
+
+    public void setList(List<SysObjectTree> list) {
         this.list = list;
     }
 }
