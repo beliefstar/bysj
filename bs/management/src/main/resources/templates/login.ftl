@@ -55,13 +55,18 @@
 			                    <form role="form" action="/account/login" method="post" class="login-form">
 			                    	<div class="form-group">
 			                    		<label class="sr-only" for="form-username">Username</label>
-			                        	<input type="text" name="username" placeholder="Username..." class="form-username form-control" id="form-username">
+			                        	<input type="email" name="email" placeholder="email..." class="form-username form-control" id="form-username">
 			                        </div>
 			                        <div class="form-group">
 			                        	<label class="sr-only" for="form-password">Password</label>
 			                        	<input type="password" name="password" placeholder="Password..." class="form-password form-control" id="form-password">
 			                        </div>
-			                        <button type="submit" class="btn">登 录</button>
+                                    <div class="form-group">
+			                            <button type="submit" class="btn">登 录</button>
+                                    </div>
+                                    <div class="form-group" id="info" style="display: none">
+                                        <div class="alert alert-danger" role="alert"></div>
+                                    </div>
 			                    </form>
 		                    </div>
                         </div>

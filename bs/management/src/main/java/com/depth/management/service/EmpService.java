@@ -1,6 +1,7 @@
 package com.depth.management.service;
 
 import com.depth.management.model.Emp;
+import com.depth.management.session.LoginInfo;
 
 import java.util.List;
 
@@ -12,4 +13,11 @@ public interface EmpService {
 
     Emp save(Emp emp);
 
+    void login(String email, String password);
+
+    void register(Emp emp, LoginInfo loginInfo);
+
+    void modifyPwd(String oldPwd, String newPwd, LoginInfo loginInfo);
+
+    void checkEmail(String email);
 }

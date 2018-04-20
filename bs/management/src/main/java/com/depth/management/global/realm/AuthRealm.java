@@ -1,10 +1,8 @@
 package com.depth.management.global.realm;
 
 import com.alibaba.druid.util.StringUtils;
-import com.depth.management.mapper.AccountMapper;
 import com.depth.management.mapper.EmpMapper;
 import com.depth.management.mapper.SysObjectMapper;
-import com.depth.management.model.Account;
 import com.depth.management.model.Emp;
 import com.depth.management.session.LoginInfo;
 import org.apache.shiro.SecurityUtils;
@@ -26,13 +24,11 @@ import java.util.stream.Collectors;
 public class AuthRealm extends AuthorizingRealm {
 
     private final SysObjectMapper sysObjectMapper;
-    private final AccountMapper accountMapper;
     private final EmpMapper empMapper;
 
     @Autowired
-    public AuthRealm(SysObjectMapper sysObjectMapper, AccountMapper accountMapper, EmpMapper empMapper) {
+    public AuthRealm(SysObjectMapper sysObjectMapper, EmpMapper empMapper) {
         this.sysObjectMapper = sysObjectMapper;
-        this.accountMapper = accountMapper;
         this.empMapper = empMapper;
         HashedCredentialsMatcher matcher = new HashedCredentialsMatcher();
         matcher.setHashAlgorithmName("MD5");
@@ -59,21 +55,26 @@ public class AuthRealm extends AuthorizingRealm {
         return info;
     }
 
+    /**
+     * 登陆
+     * @param authenticationToken
+     * @return
+     * @throws AuthenticationException
+     */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         System.out.println("身份认证");
 
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
 
-        String username = token.getUsername();
-        Account temp = new Account();
-        temp.setUsername(username);
-        temp = accountMapper.selectOne(temp);
-        ByteSource salt = ByteSource.Util.bytes(temp.getSalt());
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(username, temp.getPassword(), salt, getName());
+        String email = token.getUsername();
+        Emp emp = new Emp();
+        emp.setEmail(email);
+        emp = empMapper.selectOne(emp);
+        ByteSource salt = ByteSource.Util.bytes(emp.getPhone());
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(email, emp.getPassword(), salt, getName());
 
-        Emp emp = empMapper.selectByPrimaryKey(temp.getEmpId());
-        LoginInfo loginInfo = new LoginInfo(emp, temp);
+        LoginInfo loginInfo = new LoginInfo(emp);
         SecurityUtils.getSubject().getSession().setAttribute(LoginInfo.SESSION_NAME, loginInfo);
         return info;
     }

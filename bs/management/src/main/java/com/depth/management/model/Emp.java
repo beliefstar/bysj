@@ -27,11 +27,19 @@ public class Emp extends BaseEntity {
     /**
      * 年龄
      */
-    private int age;
+    private Integer age;
     /**
      * 性别
      */
     private String gender;
+    /**
+     * 密码
+     */
+    private String password;
+    /**
+     * 最近一次登录
+     */
+    private Date lastLogin;
     /**
      * 入职时间
      */
@@ -53,13 +61,9 @@ public class Emp extends BaseEntity {
      */
     private Date birthday;
     /**
-     * 电话1
+     * 电话
      */
-    private String phone1;
-    /**
-     * 电话2
-     */
-    private String phone2;
+    private String phone;
     /**
      * 邮箱
      */
@@ -73,11 +77,51 @@ public class Emp extends BaseEntity {
      */
     private String education;
     /**
+     * 部门ID
+     */
+    private Long departmentId;
+    /**
+     * 职位
+     */
+    private String post;
+    /**
      * 删除标志
      */
     private String delFlg;
 
     public Emp() {
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Date getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+    public Long getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(long departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    public String getPost() {
+        return post;
+    }
+
+    public void setPost(String post) {
+        this.post = post;
     }
 
     public Long getId() {
@@ -96,11 +140,11 @@ public class Emp extends BaseEntity {
         this.name = name;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 
@@ -152,20 +196,12 @@ public class Emp extends BaseEntity {
         this.birthday = birthday;
     }
 
-    public String getPhone1() {
-        return phone1;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPhone1(String phone1) {
-        this.phone1 = phone1;
-    }
-
-    public String getPhone2() {
-        return phone2;
-    }
-
-    public void setPhone2(String phone2) {
-        this.phone2 = phone2;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getEmail() {
@@ -212,8 +248,7 @@ public class Emp extends BaseEntity {
                 ", politics='" + politics + '\'' +
                 ", address='" + address + '\'' +
                 ", birthday=" + birthday +
-                ", phone1='" + phone1 + '\'' +
-                ", phone2='" + phone2 + '\'' +
+                ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
                 ", school='" + school + '\'' +
                 ", education='" + education + '\'' +

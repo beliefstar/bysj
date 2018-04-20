@@ -24,9 +24,9 @@ public class IndexController {
 
     @GetMapping({"/", "/index"})
     public String index(ModelMap modelMap, LoginInfo loginInfo) {
-        final Emp loginEmp = loginInfo.getEmp();
+        final Emp emp = loginInfo.getEmp();
         try {
-            List<SysObject> module = sysObjectService.findModule(loginEmp.getId());
+            List<SysObject> module = sysObjectService.findModule(emp.getId());
 
             modelMap.put("moduleList", module);
         } catch (Exception e) {

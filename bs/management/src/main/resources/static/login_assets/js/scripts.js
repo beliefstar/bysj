@@ -18,17 +18,29 @@ jQuery(document).ready(function() {
     });
     
     $('.login-form').on('submit', function(e) {
-    	
+        e.preventDefault();
+        var flag = false;
     	$(this).find('input[type="text"], input[type="password"], textarea').each(function(){
     		if( $(this).val() === "" ) {
-    			e.preventDefault();
     			$(this).addClass('input-error');
+    			flag = true;
     		}
     		else {
     			$(this).removeClass('input-error');
     		}
     	});
-    	
+    	if (flag) return;
+    	var url = $(this).attr("action");
+    	var data = $(this).serialize();
+    	console.log(data);
+    	$.post(url, data, function (rel) {
+			if (rel.status === 200) {
+				window.location.href = "/";
+			} else {
+                $("#info").find("div").html(rel.message);
+				$("#info").slideDown();
+			}
+        })
     });
     
     

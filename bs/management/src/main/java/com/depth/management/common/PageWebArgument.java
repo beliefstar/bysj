@@ -1,6 +1,6 @@
 package com.depth.management.common;
 
-import com.depth.management.common.vo.PageInfo;
+import com.github.pagehelper.PageInfo;
 import org.springframework.core.MethodParameter;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.support.WebArgumentResolver;
@@ -22,7 +22,7 @@ public class PageWebArgument implements WebArgumentResolver {
                     PageInfo<?> pageInfo = new PageInfo<>();
                     pageInfo.setPageNum(Integer.parseInt(split[0]));
                     pageInfo.setPageSize(Integer.parseInt(split[1]));
-                    pageInfo.setTotalSize(Integer.parseInt(split[2]));
+                    pageInfo.setTotal(Integer.parseInt(split[2]));
                     return pageInfo;
                 }
             }

@@ -37,13 +37,13 @@ public class ShiroConfig {
         ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
         bean.setSecurityManager(defaultWebSecurityManager());
         bean.setLoginUrl("/account/login");
-        bean.setSuccessUrl("/");
         Map<String, String> map = new HashMap<>();
         map.put("/bootstrap/**", "anon");
         map.put("/dist/**", "anon");
         map.put("/login_assets/**", "anon");
         map.put("/plugins/**", "anon");
         map.put("/account/login", "anon");
+        map.put("/account/register", "anon");
         map.put("/account/logout", "logout");
         map.put("/**", "authc");
         bean.setFilterChainDefinitionMap(map);
