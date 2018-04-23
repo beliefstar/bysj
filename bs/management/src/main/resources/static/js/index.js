@@ -15,3 +15,9 @@ function showLab(url, title, aside) {
         $("#container-view").html(data);
     })
 }
+
+
+function messageBox(data) {
+    $("#message-box").find(".modal-body").html(data);
+    $("#message-box").modal("show");
+}

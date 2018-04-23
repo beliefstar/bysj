@@ -37,7 +37,7 @@ public class SysObjectServiceImpl implements SysObjectService {
                 if (item.getParentId() == 0) {
                     List<SysObjectTree> list = new ArrayList<>();
                     for (SysObjectTree v : module) {
-                        if (item.getId() == v.getParentId()) {
+                        if (item.getId().equals(v.getParentId())) {
                             list.add(v);
                         }
                     }

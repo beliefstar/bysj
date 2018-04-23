@@ -85,6 +85,10 @@ public class Emp extends BaseEntity {
      */
     private String post;
     /**
+     * 是否为正式员工 0-非正式   1-正式
+     */
+    private String ready;
+    /**
      * 删除标志
      */
     private String delFlg;
@@ -228,6 +232,14 @@ public class Emp extends BaseEntity {
         this.education = education;
     }
 
+    public String getReady() {
+        return ready;
+    }
+
+    public void setReady(String ready) {
+        this.ready = ready;
+    }
+
     public String getDelFlg() {
         return delFlg;
     }
@@ -243,6 +255,8 @@ public class Emp extends BaseEntity {
                 ", name='" + name + '\'' +
                 ", age=" + age +
                 ", gender='" + gender + '\'' +
+                ", password='" + password + '\'' +
+                ", lastLogin=" + lastLogin +
                 ", joinTime=" + joinTime +
                 ", nation='" + nation + '\'' +
                 ", politics='" + politics + '\'' +
@@ -252,6 +266,9 @@ public class Emp extends BaseEntity {
                 ", email='" + email + '\'' +
                 ", school='" + school + '\'' +
                 ", education='" + education + '\'' +
+                ", departmentId=" + departmentId +
+                ", post='" + post + '\'' +
+                ", ready='" + ready + '\'' +
                 ", delFlg='" + delFlg + '\'' +
                 '}';
     }

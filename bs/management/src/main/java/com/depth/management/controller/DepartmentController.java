@@ -1,14 +1,15 @@
 package com.depth.management.controller;
 
+import com.depth.management.common.vo.Result;
 import com.depth.management.model.Department;
 import com.depth.management.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/department")
 public class DepartmentController {
 
     private final DepartmentService departmentService;
@@ -21,5 +22,14 @@ public class DepartmentController {
     @GetMapping("/getDepartment")
     public List<Department> index() {
         return departmentService.findAll();
+    }
+
+    @PostMapping("/findListByParentId")
+    @ResponseBody
+    public Result findListByParentId(Long id) {
+        Result result = new Result();
+        List<Department> list = departmentService.findListByParentId(id);
+        result.setData(list);
+        return result;
     }
 }

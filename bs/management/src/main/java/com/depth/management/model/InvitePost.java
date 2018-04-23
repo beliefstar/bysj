@@ -1,6 +1,7 @@
 package com.depth.management.model;
 
 import com.depth.management.common.BaseEntity;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -55,7 +56,7 @@ public class InvitePost extends BaseEntity {
     }
 
     public String getStatus() {
-        return status;
+        return StringUtils.isEmpty(status) ? null : status;
     }
 
     public void setStatus(String status) {
