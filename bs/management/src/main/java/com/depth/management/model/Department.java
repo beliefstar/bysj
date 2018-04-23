@@ -20,10 +20,6 @@ public class Department extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long departmentId;
     /**
-     * 父级菜单
-     */
-    private Long parentId;
-    /**
      * 部门名称
      */
     private String name;
@@ -45,14 +41,6 @@ public class Department extends BaseEntity {
 
     public void setDepartmentId(Long departmentId) {
         this.departmentId = departmentId;
-    }
-
-    public Long getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
     }
 
     public String getName() {
@@ -83,7 +71,6 @@ public class Department extends BaseEntity {
     public String toString() {
         return "Department{" +
                 "departmentId=" + departmentId +
-                ", parentId=" + parentId +
                 ", name='" + name + '\'' +
                 ", master=" + master +
                 ", introduce='" + introduce + '\'' +

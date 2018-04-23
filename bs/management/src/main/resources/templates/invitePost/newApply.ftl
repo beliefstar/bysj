@@ -100,7 +100,7 @@
             <label for="inputtext3" class="col-sm-2 control-label">部门 :</label>
 
             <div class="col-sm-2">
-                <select class="form-control" id="department-one">
+                <select class="form-control" id="department">
 
                 </select>
             </div>
@@ -126,36 +126,18 @@
     });
 
   function selectChange() {
-      $(this).parent().nextAll().remove();
       var pid = $(this).find("option:selected")[0].dataset.id;
       if (!pid) {
-          var prev = $(this).parent().prev().find("select");
-          if (prev[0]) {
-              var t = prev.find("option:selected")[0].dataset.id;
-              if (t) {
-                  $("#departmentId").val(t);
-              }
-          }
           return;
       }
       $("#departmentId").val(pid);
-      $(this).parent().after("<div class=\"col-sm-2\" style=\"display: none\">\n" +
-              "          <select class=\"form-control\">\n" +
-              "              \n" +
-              "          </select>\n" +
-              "        </div>");
-      var el = $(this).parent().parent().children("div:last-child").find("select");
-      getDepartment(pid, el);
-      el.change(selectChange);
   }
 
-  function getDepartment(pId, el) {
+  function getDepartment() {
+      var el = $("#department");
       jQuery.ajax({
           type: "POST",
-          url: "/department/findListByParentId",
-          data: $.param({
-              id: pId
-          }),
+          url: "/department/findList",
           dataType: "json"
       }).done(function (rel) {
           if (rel.status === 200) {
@@ -165,9 +147,6 @@
                       html += '<option data-id="' + v.departmentId + '" data-pid="' + v.parentId + '">' + v.name + '</option>';
                   });
                   el.html(html);
-                  el.parent().show();
-              } else {
-                  el.parent().remove();
               }
 
           } else {
@@ -176,9 +155,9 @@
       })
   }
 
-  getDepartment(0, $("#department-one"));
+  getDepartment();
 
-  $("#department-one").change(selectChange);
+  $("#department").change(selectChange);
 
 
     $("#form${uuid}").submit(function () {
@@ -193,7 +172,7 @@
             console.log(data);
             if (data.status === 200) {
                 messageBox("保存成功！");
-                // todo
+                showLab('/invitePost/interview', '招聘管理', '面试管理');
             }
         });
         return false;

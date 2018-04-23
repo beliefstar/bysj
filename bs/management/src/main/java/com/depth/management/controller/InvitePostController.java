@@ -1,5 +1,6 @@
 package com.depth.management.controller;
 
+import com.depth.management.common.exception.TurnErrorException;
 import com.depth.management.common.vo.Result;
 import com.depth.management.model.Department;
 import com.depth.management.model.Emp;
@@ -11,6 +12,7 @@ import com.depth.management.service.InvitePostService;
 import com.depth.management.session.LoginInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,8 +44,39 @@ public class InvitePostController {
         return tpl + "/newApply";
     }
 
+
+    @GetMapping("/detail")
+    public String detail(Long id, ModelMap modelMap) {
+        try {
+            Emp emp = empService.findById(id);
+            modelMap.put("emp", emp);
+            Department department = departmentService.findById(emp.getDepartmentId());
+            modelMap.put("department", department);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new TurnErrorException("500");
+        }
+        return tpl + "/detail";
+    }
+
+
+
     @GetMapping("/interview")
-    public String newApplyDepartment() {
+    public String interview(ModelMap modelMap, LoginInfo loginInfo) {
+        final Emp loginEmp = loginInfo.getEmp();
+
+        String[] btn = {"all", "new", "denied"};
+        modelMap.put("btnList", btn);
+
+        modelMap.put("isMaster", loginEmp.getId().equals(23L));
+        return tpl + "/newApply_list";
+    }
+
+    @GetMapping("/allot")
+    public String allot(ModelMap modelMap) {
+        String[] btn = {"access"};
+        modelMap.put("btnList", btn);
+        modelMap.put("status", 1);
         return tpl + "/newApply_list";
     }
 
@@ -71,8 +104,9 @@ public class InvitePostController {
 
     @PostMapping("/getList")
     @ResponseBody
-    public Result getList(InvitePost invitePost) {
+    public Result getList(InvitePost invitePost, LoginInfo loginInfo) {
         Result result = new Result();
+        final Emp loginEmp = loginInfo.getEmp();
 
         List<InvitePost> invitePostList = invitePostService.findList(invitePost);
 
@@ -86,7 +120,9 @@ public class InvitePostController {
             example.setEmpDepartment(department);
             Emp approver = empService.findById(post.getApprover());
             example.setApprover(approver);
-            examples.add(example);
+            if (loginEmp.getId().equals(23L) || department.getMaster().equals(loginEmp.getId())) {
+                examples.add(example);
+            }
         }
 
         result.setData(examples);

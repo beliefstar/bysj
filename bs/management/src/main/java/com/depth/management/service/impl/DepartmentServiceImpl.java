@@ -21,17 +21,10 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public List<Department> findAll() {
-        return departmentMapper.selectAll();
-    }
-
-    @Override
-    public List<Department> findListByParentId(Long id) {
-        Department department = new Department();
-        department.setParentId(id);
 
         List<Department> list;
         try {
-            list = departmentMapper.select(department);
+            list = departmentMapper.selectAll();
         } catch (Exception e) {
             e.printStackTrace();
             throw new ServiceException(e);
@@ -44,7 +37,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         if (id.equals(0L)) {
             throw new ServiceException("为0");
         }
-        Department department = null;
+        Department department;
         try {
             department = departmentMapper.selectByPrimaryKey(id);
         } catch (Exception e) {

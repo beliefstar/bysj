@@ -17,6 +17,8 @@ import javax.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/account")
 public class AccountController {
+    private String tpl = "account/";
+
     private final EmpService empService;
 
     @Autowired
@@ -57,7 +59,6 @@ public class AccountController {
     public Result modifyPwd(String oldPwd, String newPwd, LoginInfo loginInfo, HttpSession session) {
         Result result = new Result();
         empService.modifyPwd(oldPwd, newPwd, loginInfo);
-        session.invalidate();
         SecurityUtils.getSubject().logout();
         return result;
     }
@@ -68,5 +69,10 @@ public class AccountController {
         Result result = new Result();
         empService.checkEmail(email);
         return result;
+    }
+
+    @GetMapping("/profile")
+    public String profile(LoginInfo loginInfo) {
+        return tpl + "profile";
     }
 }

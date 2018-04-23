@@ -178,7 +178,7 @@
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="#" class="btn btn-default btn-flat">资料</a>
+                  <a href="javascript:void(0)" onclick="showLab('/account/profile')" class="btn btn-default btn-flat">资料</a>
                 </div>
                 <div class="pull-right">
                   <a href="/account/logout" class="btn btn-default btn-flat">退出</a>

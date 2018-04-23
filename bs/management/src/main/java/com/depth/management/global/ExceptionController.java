@@ -1,5 +1,6 @@
 package com.depth.management.global;
 
+import com.depth.management.common.exception.TurnErrorException;
 import com.depth.management.common.vo.Result;
 import com.depth.management.common.exception.AccountException;
 import com.depth.management.common.exception.ServiceException;
@@ -26,5 +27,10 @@ public class ExceptionController {
     @ResponseBody
     public Result AccountExceptionHandler(AccountException e) {
         return new Result(500, e.getMessage());
+    }
+
+    @ExceptionHandler(TurnErrorException.class)
+    public String TurnErrorExceptionHandler(TurnErrorException e) {
+        return "error/" + e.getMessage();
     }
 }

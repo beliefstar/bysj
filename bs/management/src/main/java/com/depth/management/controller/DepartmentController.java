@@ -24,11 +24,11 @@ public class DepartmentController {
         return departmentService.findAll();
     }
 
-    @PostMapping("/findListByParentId")
+    @PostMapping("/findList")
     @ResponseBody
-    public Result findListByParentId(Long id) {
+    public Result findListByParentId() {
         Result result = new Result();
-        List<Department> list = departmentService.findListByParentId(id);
+        List<Department> list = departmentService.findAll();
         result.setData(list);
         return result;
     }

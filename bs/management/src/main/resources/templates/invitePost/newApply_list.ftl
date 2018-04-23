@@ -3,9 +3,17 @@
 <div class="box box-success load-content">
     <div class="box-header">
         <#--<div class="btn-group">-->
-            <button type="button" class="btn btn-default" onclick="getData()">全部</button>
-            <button type="button" class="btn btn-default" onclick="getData(0)">新建</button>
-            <button type="button" class="btn btn-default" onclick="getData(2)">已拒绝</button>
+            <#list btnList as item>
+                <#if item == "all">
+                    <button type="button" class="btn btn-default" onclick="getData()">全部</button>
+                <#elseif item == "new">
+                    <button type="button" class="btn btn-default" onclick="getData(0)">新建</button>
+                <#elseif item == "denied">
+                    <button type="button" class="btn btn-default" onclick="getData(2)">已拒绝</button>
+                <#elseif item == "access">
+                    <button type="button" class="btn btn-default" onclick="getData(1)">已通过</button>
+                </#if>
+            </#list>
         <#--</div>-->
 
         <div class="box-tools">
@@ -69,16 +77,23 @@
                             case "2":
                                 html += '<td><span class="label label-danger">已拒绝</span></td>';
                         }
-                        html +=    '<td><button class="btn btn-primary"><i class="fa fa-search"></i>查看</button></td>\
-                                </tr>';
+                        html += '<td>' +
+                                <#if isMaster!true>
+                                    '<button class="btn btn-xs btn-primary" onclick="showLab(\'/invitePost/detail?id=' + v.emp.id + '\')"><i class="fa fa-search"></i>查看</button>'+
+                                <#else >
+                                    '<button class="btn btn-xs btn-success" onclick="showLab(\'/invitePost/detail?id=' + v.emp.id + '\')"><i class="fa fa-search"></i>通过</button>'+
+                                    '<button class="btn btn-xs btn-danger" onclick="showLab(\'/invitePost/detail?id=' + v.emp.id + '\')"><i class="fa fa-search"></i>拒绝</button>'+
+                                </#if>
+                                '</td>'+
+                            '</tr>';
                     });
                 } else {
-                    html = "<td rowspan='5'>无相关数据</td>";
+                    html = "<td colspan='6' style='text-align: center'>无相关数据</td>";
                 }
                 $("#tbody${uuid}").html(html);
             }
         })
     }
 
-    getData();
+    getData(${status!});
 </script>

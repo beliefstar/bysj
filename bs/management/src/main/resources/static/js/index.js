@@ -5,7 +5,7 @@ function showLab(url, title, aside) {
         url: url,
         dataType: "html"
     }).done(function (data) {
-        if (title.trim() !== "") {
+        if (title && title.trim() !== "") {
             var tpl = title;
             if (aside.trim() !== "") {
                 tpl += "<small>" + aside + "</small>";
@@ -19,5 +19,8 @@ function showLab(url, title, aside) {
 
 function messageBox(data) {
     $("#message-box").find(".modal-body").html(data);
-    $("#message-box").modal("show");
+    $("#message-box").modal({
+        show: true,
+        backdrop: false
+    });
 }
