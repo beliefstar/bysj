@@ -23,10 +23,13 @@ public class InvitePost extends BaseEntity {
      * 员工ID
      */
     private Long empId;
+    private String empName;
     /**
      * 处理结果 - 0: 新建、1: 已完成、 2: 已拒绝
      */
     private String status;
+    private Long departmentId;
+    private String departmentName;
     /**
      * 审批人
      */
@@ -37,6 +40,30 @@ public class InvitePost extends BaseEntity {
     private Date entryTime;
 
     public InvitePost() {
+    }
+
+    public String getEmpName() {
+        return empName;
+    }
+
+    public void setEmpName(String empName) {
+        this.empName = empName;
+    }
+
+    public Long getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(Long departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
     }
 
     public Long getId() {

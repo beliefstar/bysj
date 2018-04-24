@@ -124,6 +124,12 @@ public class EmpServiceImpl implements EmpService {
         if (!emp.getPassword().equals(currentPwd)) {
             throw new AccountException("旧密码错误");
         }
+        try {
+            currentPwd = generatePwd(emp.getPhone(), newPwd);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            throw new ServiceException("服务器错误");
+        }
         Date date = new Date();
         emp.setPassword(currentPwd);
         emp.setUpdateTime(date);
@@ -135,5 +141,33 @@ public class EmpServiceImpl implements EmpService {
     private String generatePwd(String salt, String pwd) throws UnsupportedEncodingException {
         String rel = salt + pwd;
         return DigestUtils.md5DigestAsHex(rel.getBytes("UTF-8"));
+    }
+
+    @Override
+    public void access(Long id, String opa) {
+        Emp emp = empMapper.selectByPrimaryKey(id);
+        Date date = new Date();
+        emp.setUpdateTime(date);
+        emp.setUpdateUser(opa);
+        emp.setReady("1");
+        emp.setJoinTime(date);
+
+        //设置初始密码
+        String phone = emp.getPhone();
+        String pwd;
+        try {
+            pwd = generatePwd(phone, "123456");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            throw new ServiceException(e);
+        }
+        emp.setPassword(pwd);
+
+        try {
+            empMapper.updateByPrimaryKeySelective(emp);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException(e);
+        }
     }
 }

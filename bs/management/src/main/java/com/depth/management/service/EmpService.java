@@ -20,4 +20,7 @@ public interface EmpService {
     void modifyPwd(String oldPwd, String newPwd, LoginInfo loginInfo);
 
     void checkEmail(String email);
+
+    void access(Long id, String opa);
+
 }

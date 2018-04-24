@@ -19,7 +19,7 @@
                     <li><label>年龄：</label>${emp.age}</li>
                     <li><label>性别：</label>${emp.gender}</li>
                     <li><label>部门：</label>${department.name}</li>
-                    <li><label>入职时间：</label>${emp.joinTime!}</li>
+                    <li><label>入职时间：</label>${emp.joinTime!?string('yyyy-MM-dd')}</li>
                 </ul>
             </div>
             <div class="col-sm-5">

@@ -5,7 +5,6 @@ import com.depth.management.common.vo.Result;
 import com.depth.management.model.Department;
 import com.depth.management.model.Emp;
 import com.depth.management.model.InvitePost;
-import com.depth.management.model.example.InvitePostExample;
 import com.depth.management.service.DepartmentService;
 import com.depth.management.service.EmpService;
 import com.depth.management.service.InvitePostService;
@@ -18,8 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 @Controller
@@ -92,6 +91,10 @@ public class InvitePostController {
         empService.save(emp, loginEmp.getName());
 
         InvitePost invitePost = new InvitePost();
+        invitePost.setEmpName(emp.getName());
+        invitePost.setDepartmentId(emp.getDepartmentId());
+        Department department = departmentService.findById(emp.getDepartmentId());
+        invitePost.setDepartmentName(department.getName());
         invitePost.setApprover(loginEmp.getId());
         invitePost.setEmpId(emp.getId());
         invitePost.setEntryTime(new Date());
@@ -110,23 +113,33 @@ public class InvitePostController {
 
         List<InvitePost> invitePostList = invitePostService.findList(invitePost);
 
-        List<InvitePostExample> examples = new ArrayList<>();
-
-        for (InvitePost post : invitePostList) {
-            InvitePostExample example = InvitePostExample.from(post);
-            Emp emp = empService.findById(post.getEmpId());
-            example.setEmp(emp);
-            Department department = departmentService.findById(emp.getDepartmentId());
-            example.setEmpDepartment(department);
-            Emp approver = empService.findById(post.getApprover());
-            example.setApprover(approver);
-            if (loginEmp.getId().equals(23L) || department.getMaster().equals(loginEmp.getId())) {
-                examples.add(example);
-            }
+        Iterator<InvitePost> iterator = invitePostList.iterator();
+        while (iterator.hasNext()) {
+            InvitePost post = iterator.next();
+            Department department = departmentService.findById(post.getDepartmentId());
+            boolean flag = loginEmp.getId().equals(23L) || department.getMaster().equals(loginEmp.getId());
+            if (!flag) iterator.remove();
         }
+        result.setData(invitePostList);
+        return result;
+    }
 
-        result.setData(examples);
+    @PostMapping("/access")
+    @ResponseBody
+    public Result access(Long empId, LoginInfo loginInfo) {
+        final Emp loginEmp = loginInfo.getEmp();
+        Result result = new Result();
+        empService.access(empId, loginEmp.getName());
+        invitePostService.access(empId, loginEmp);
+        return result;
+    }
 
+    @PostMapping("/denied")
+    @ResponseBody
+    public Result denied(Long empId, LoginInfo loginInfo) {
+        final Emp loginEmp = loginInfo.getEmp();
+        Result result = new Result();
+        invitePostService.denied(empId, loginEmp);
         return result;
     }
 }

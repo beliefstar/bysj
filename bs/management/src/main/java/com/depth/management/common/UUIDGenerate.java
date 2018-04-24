@@ -2,13 +2,8 @@ package com.depth.management.common;
 
 import com.depth.management.model.Emp;
 import org.springframework.util.DigestUtils;
-import sun.misc.BASE64Encoder;
 
 import java.io.UnsupportedEncodingException;
-import java.security.SecureRandom;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.UUID;
 
 public class UUIDGenerate {
     public static void main(String[] args) throws UnsupportedEncodingException {
@@ -19,5 +14,9 @@ public class UUIDGenerate {
         emp.setDepartmentId(54L);
 //        EmpExample empExample = (EmpExample) emp;//no
 //        System.out.println(empExample);
+
+        String str = "16678784545123456";
+        str = DigestUtils.md5DigestAsHex(str.getBytes("UTF-8"));
+        System.out.println(str);
     }
 }

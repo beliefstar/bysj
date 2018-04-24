@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.depth.management.mapper.InvitePostMapper">
+
+    <select id="access">
+        UPDATE invite_post SET `status`='1', approver=#{approver}, update_user=#{user}, update_time=NOW() WHERE emp_id=#{empId}
+    </select>
+
+    <select id="denied">
+        UPDATE invite_post SET `status`='2', approver=#{approver}, update_user=#{user}, update_time=NOW() WHERE emp_id=#{empId}
+    </select>
+
+</mapper>
