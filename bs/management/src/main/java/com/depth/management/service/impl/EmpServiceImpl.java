@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import sun.misc.BASE64Encoder;
+import tk.mybatis.mapper.entity.Example;
 
 import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;
@@ -45,7 +46,13 @@ public class EmpServiceImpl implements EmpService {
 
     @Override
     public List<Emp> findAll() {
-        return empMapper.selectAll();
+        Example example = new Example(Emp.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("ready", "1");
+        criteria.andEqualTo("delFlg", "0");
+        example.orderBy("joinTime").desc();
+
+        return empMapper.selectByExample(example);
     }
 
     @Transactional
@@ -169,5 +176,21 @@ public class EmpServiceImpl implements EmpService {
             e.printStackTrace();
             throw new ServiceException(e);
         }
+    }
+
+    @Override
+    public List<Emp> findByDepartmentId(Long id) {
+        Emp emp = new Emp();
+        emp.setReady("1");
+        emp.setDelFlg("0");
+        emp.setDepartmentId(id);
+        List<Emp> list;
+        try {
+            list = empMapper.select(emp);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException(e);
+        }
+        return list;
     }
 }

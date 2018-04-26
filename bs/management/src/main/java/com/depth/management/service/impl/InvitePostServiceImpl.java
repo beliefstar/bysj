@@ -7,6 +7,7 @@ import com.depth.management.model.InvitePost;
 import com.depth.management.service.InvitePostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
 import java.util.List;
@@ -39,7 +40,11 @@ public class InvitePostServiceImpl implements InvitePostService {
 
     @Override
     public List<InvitePost> findList(InvitePost invitePost) {
-        return invitePostMapper.select(invitePost);
+        Example example = new Example(InvitePost.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("status", invitePost.getStatus());
+        example.orderBy("entryTime").desc();
+        return invitePostMapper.selectByExample(example);
     }
 
     @Override

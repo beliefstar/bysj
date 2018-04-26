@@ -23,4 +23,6 @@ public interface EmpService {
 
     void access(Long id, String opa);
 
+    List<Emp> findByDepartmentId(Long id);
+
 }

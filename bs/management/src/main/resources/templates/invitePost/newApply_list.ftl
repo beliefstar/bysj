@@ -76,12 +76,10 @@
                                 html += '<td><span class="label label-danger">已拒绝</span></td>';
                         }
                         html += '<td>';
-
-                        html +=
                         <#if isMaster!true>
-                            '<button class="btn btn-xs btn-primary" onclick="showLab(\'/invitePost/detail?id=' + v.empId + '\')"><i class="fa fa-search"></i>查看</button>'+
-                        <#else >"";
-                        if (v.status !== "1") {
+                            html +='<button class="btn btn-xs btn-primary" onclick="showLab(\'/invitePost/detail?id=' + v.empId + '\')"><i class="fa fa-search"></i>查看</button>';
+                        <#else >
+                        if (v.status === "0") {
                             html +='<button class="btn btn-xs btn-success" onclick="caozuo(\'access\', \'' + v.empId + '\')"><i class="fa fa-search"></i>通过</button>' +
                                     '<button class="btn btn-xs btn-danger" onclick="caozuo(\'denied\', \'' + v.empId + '\')"><i class="fa fa-search"></i>拒绝</button>';
                         } else {
@@ -112,6 +110,7 @@
         }).done(function (rel) {
             if (rel.status === 200) {
                 messageBox("操作成功！");
+                getData(${status!});
             } else {
                 messageBox("操作失败");
             }
