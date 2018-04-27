@@ -7,7 +7,7 @@ function showLab(url, title, aside) {
     }).done(function (data) {
         if (title && title.trim() !== "") {
             var tpl = title;
-            if (aside.trim() !== "") {
+            if (aside && aside.trim() !== "") {
                 tpl += "<small>" + aside + "</small>";
             }
             $("#content-header").html(tpl);

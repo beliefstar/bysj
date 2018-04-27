@@ -2,10 +2,7 @@ package com.depth.management.model;
 
 import com.depth.management.common.BaseEntity;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -26,6 +23,11 @@ public class Vacate extends BaseEntity {
      * 请假者
      */
     private Long empId;
+    /**
+     * 名字
+     */
+    @Transient
+    private String name;
     /**
      * 开始时间
      */
@@ -56,6 +58,14 @@ public class Vacate extends BaseEntity {
     private Long departmentId;
 
     public Vacate() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getDepartmentId() {

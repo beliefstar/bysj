@@ -81,7 +81,22 @@ public class EmpController {
     public String getList(LoginInfo loginInfo, ModelMap modelMap) {
         final Emp loginEmp = loginInfo.getEmp();
         List<Vacate> vacateList = vacateService.getList(loginEmp.getDepartmentId());
+
         modelMap.put("list", vacateList);
         return view("vacate_list");
+    }
+
+    @GetMapping("/holidayApply")
+    public String holidayApply() {
+        return view("holidayApply");
+    }
+
+    @PostMapping("/submitVacate")
+    @ResponseBody
+    public Result holidayApply(String text, String timeRange, LoginInfo loginInfo) {
+        final Emp loginEmp = loginInfo.getEmp();
+        Result result = new Result();
+        vacateService.newVacate(text, timeRange, loginEmp);
+        return result;
     }
 }

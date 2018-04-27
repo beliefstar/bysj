@@ -23,7 +23,7 @@
             <#list list as item>
             <tr>
                 <td>${item_index}</td>
-                <td>${item.name}</td>
+                <td>${item.name!}</td>
                 <td>${item.beginTime?string('yyyy-MM-dd')} - ${item.beginTime?string('yyyy-MM-dd')}</td>
                 <td>${item.upTime?string('yyyy-MM-dd')}</td>
                 <td>
