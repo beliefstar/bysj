@@ -13,4 +13,8 @@
         FROM sys_role_emp re,sys_role_permission rp, sys_permission m
         WHERE re.emp_id=#{empId} AND re.role_id=rp.role_id AND rp.permission_id=m.id
     </select>
+
+    <insert id="insertPermission">
+        INSERT INTO sys_role_emp VALUES (null, #{empId}, #{roleId}, NOw(), '1001', NOW(), '1001')
+    </insert>
 </mapper>

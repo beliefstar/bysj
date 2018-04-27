@@ -25,4 +25,5 @@ public interface EmpService {
 
     List<Emp> findByDepartmentId(Long id);
 
+    void update(Emp emp, String opeUser);
 }

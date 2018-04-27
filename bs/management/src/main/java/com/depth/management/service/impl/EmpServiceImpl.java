@@ -3,25 +3,21 @@ package com.depth.management.service.impl;
 import com.depth.management.common.exception.AccountException;
 import com.depth.management.common.exception.ServiceException;
 import com.depth.management.mapper.EmpMapper;
+import com.depth.management.mapper.SysObjectMapper;
 import com.depth.management.model.Emp;
 import com.depth.management.service.EmpService;
 import com.depth.management.session.LoginInfo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
-import org.springframework.util.StringUtils;
-import sun.misc.BASE64Encoder;
 import tk.mybatis.mapper.entity.Example;
 
 import java.io.UnsupportedEncodingException;
-import java.security.SecureRandom;
 import java.util.Date;
 import java.util.List;
 
@@ -29,10 +25,12 @@ import java.util.List;
 public class EmpServiceImpl implements EmpService {
 
     private final EmpMapper empMapper;
+    private final SysObjectMapper sysObjectMapper;
 
     @Autowired
-    public EmpServiceImpl(EmpMapper empMapper) {
+    public EmpServiceImpl(EmpMapper empMapper, SysObjectMapper sysObjectMapper) {
         this.empMapper = empMapper;
+        this.sysObjectMapper = sysObjectMapper;
     }
 
 
@@ -71,6 +69,19 @@ public class EmpServiceImpl implements EmpService {
             throw new ServiceException("参数错误");
         }
         return emp;
+    }
+
+    @Override
+    public void update(Emp emp, String opeUser) {
+        Date date = new Date();
+        emp.setUpdateTime(date);
+        emp.setUpdateUser(opeUser);
+        try {
+            empMapper.updateByPrimaryKeySelective(emp);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException(e);
+        }
     }
 
     @Override
@@ -172,10 +183,13 @@ public class EmpServiceImpl implements EmpService {
 
         try {
             empMapper.updateByPrimaryKeySelective(emp);
+            //设置权限
+            sysObjectMapper.insertPermission(id, 2);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ServiceException(e);
         }
+
     }
 
     @Override

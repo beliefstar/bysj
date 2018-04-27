@@ -1,16 +1,21 @@
 package com.depth.management.controller;
 
 import com.depth.management.common.exception.TurnErrorException;
+import com.depth.management.common.vo.Result;
 import com.depth.management.model.Department;
 import com.depth.management.model.Emp;
+import com.depth.management.model.Vacate;
 import com.depth.management.service.DepartmentService;
 import com.depth.management.service.EmpService;
+import com.depth.management.service.VacateService;
 import com.depth.management.session.LoginInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -21,11 +26,13 @@ public class EmpController {
 
     private final EmpService empService;
     private final DepartmentService departmentService;
+    private final VacateService vacateService;
 
     @Autowired
-    public EmpController(EmpService empService, DepartmentService departmentService) {
+    public EmpController(EmpService empService, DepartmentService departmentService, VacateService vacateService) {
         this.empService = empService;
         this.departmentService = departmentService;
+        this.vacateService = vacateService;
     }
 
     @GetMapping("/view")
@@ -50,7 +57,31 @@ public class EmpController {
         return view("emp_list");
     }
 
+    @GetMapping("/edit")
+    public String editUI(Long id, ModelMap modelMap) {
+        Emp emp = empService.findById(id);
+        modelMap.put("emp", emp);
+        return view("emp_manage_edit");
+    }
+
+    @PostMapping("/update")
+    @ResponseBody
+    public Result save(Emp emp, LoginInfo loginInfo) {
+        final Emp loginEmp = loginInfo.getEmp();
+        Result result = new Result();
+        empService.update(emp, loginEmp.getName());
+        return result;
+    }
+
     public String view(String view) {
         return tpl + "/" + view;
+    }
+
+    @GetMapping("/holiday")
+    public String getList(LoginInfo loginInfo, ModelMap modelMap) {
+        final Emp loginEmp = loginInfo.getEmp();
+        List<Vacate> vacateList = vacateService.getList(loginEmp.getDepartmentId());
+        modelMap.put("list", vacateList);
+        return view("vacate_list");
     }
 }

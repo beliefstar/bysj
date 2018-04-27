@@ -50,8 +50,20 @@ public class Vacate extends BaseEntity {
      * 审批人
      */
     private Long approveId;
+    /**
+     * 部门
+     */
+    private Long departmentId;
 
     public Vacate() {
+    }
+
+    public Long getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(Long departmentId) {
+        this.departmentId = departmentId;
     }
 
     public Long getId() {

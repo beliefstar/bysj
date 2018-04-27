@@ -10,7 +10,7 @@
     <div class="box-body">
         <div class="row">
             <div class="col-sm-2 text-center">
-                <img class="img-responsive img-bordered center-block" src="${emp.img!"dist/img/user2-160x160.jpg"}" alt="User profile picture">
+                <img class="img-responsive img-bordered center-block" src="${emp.img!"dist/img/user_img.png"}" alt="User profile picture">
             </div>
             <div class="col-sm-5">
                 <ul>
@@ -19,7 +19,11 @@
                     <li><label>年龄：</label>${emp.age}</li>
                     <li><label>性别：</label>${emp.gender}</li>
                     <li><label>部门：</label>${department.name}</li>
-                    <li><label>入职时间：</label>${emp.joinTime!?string('yyyy-MM-dd')}</li>
+                    <li><label>入职时间：</label>
+                        <#if emp.joinTime??>
+                            ${emp.joinTime?string('yyyy-MM-dd')}
+                        </#if>
+                    </li>
                 </ul>
             </div>
             <div class="col-sm-5">
