@@ -1,11 +1,12 @@
-package com.depth.management.mapper;
+package com.depth.management.service;
 
 import com.depth.management.model.AdjustmentApply;
-import tk.mybatis.mapper.common.Mapper;
+import com.depth.management.model.Emp;
 
 import java.util.List;
 
-public interface AdjustmentApplyMapper extends Mapper<AdjustmentApply> {
+public interface AdjustmentApplyService {
+    void newAdjustmentApply(AdjustmentApply apply, Emp loginEmp);
 
     List<AdjustmentApply> findByOrigin(Long departmentId);
 

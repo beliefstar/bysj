@@ -2,10 +2,7 @@ package com.depth.management.model;
 
 import com.depth.management.common.BaseEntity;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -23,6 +20,11 @@ public class AdjustmentApply extends BaseEntity {
      */
     private Long empId;
     /**
+     * 员工名
+     */
+    @Transient
+    private String empName;
+    /**
      * 申请时间
      */
     private Date applyTime;
@@ -34,10 +36,14 @@ public class AdjustmentApply extends BaseEntity {
      * 源部门ID
      */
     private Long origin;
+    @Transient
+    private String originName;
     /**
      * 到达部门ID
      */
     private Long arrive;
+    @Transient
+    private String arriveName;
     /**
      * 申请状态- 0: 新申请、1: 原部门主管同意、2: 原部门拒绝、3: 到达部门同意、4:到达部门拒绝
      */
@@ -50,6 +56,8 @@ public class AdjustmentApply extends BaseEntity {
      * 原部门审批人
      */
     private Long originApprove;
+    @Transient
+    private String originApproveName;
     /**
      * 原部门备注
      */
@@ -62,12 +70,54 @@ public class AdjustmentApply extends BaseEntity {
      * 到达部门审批人
      */
     private Long arriveApprove;
+    @Transient
+    private String arriveApproveName;
     /**
      * 到达部门备注
      */
     private String arriveComment;
 
     public AdjustmentApply() {
+    }
+
+    public String getEmpName() {
+        return empName;
+    }
+
+    public void setEmpName(String empName) {
+        this.empName = empName;
+    }
+
+    public String getOriginName() {
+        return originName;
+    }
+
+    public void setOriginName(String originName) {
+        this.originName = originName;
+    }
+
+    public String getArriveName() {
+        return arriveName;
+    }
+
+    public void setArriveName(String arriveName) {
+        this.arriveName = arriveName;
+    }
+
+    public String getOriginApproveName() {
+        return originApproveName;
+    }
+
+    public void setOriginApproveName(String originApproveName) {
+        this.originApproveName = originApproveName;
+    }
+
+    public String getArriveApproveName() {
+        return arriveApproveName;
+    }
+
+    public void setArriveApproveName(String arriveApproveName) {
+        this.arriveApproveName = arriveApproveName;
     }
 
     public Long getId() {

@@ -64,9 +64,9 @@ public class DruidConfig {
     @Value("${spring.druid.filters}")
     private String filters;
 
-    @Bean
+    @Bean(initMethod = "init", destroyMethod = "close")
     @Primary
-    public DataSource dataSource() {
+    public DruidDataSource dataSource() {
         DruidDataSource source = new DruidDataSource();
 
         source.setUrl(url);
