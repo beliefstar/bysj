@@ -2,8 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.depth.management.mapper.VacateMapper">
 
-    <select id="getAll" resultType="vacate">
+    <select id="getAllByDepartment" resultType="com.depth.management.model.Vacate">
         select vacate.*, emp.name from vacate, emp where vacate.emp_id = emp.id and vacate.department_id=#{departmentId} order by up_time desc
     </select>
 
+
+    <select id="getAllByEmpId" resultType="com.depth.management.model.Vacate">
+        select vacate.*, emp.name from vacate, emp where vacate.emp_id = emp.id and emp_id=#{empId} order by up_time desc
+    </select>
 </mapper>

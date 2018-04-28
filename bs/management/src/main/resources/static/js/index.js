@@ -24,3 +24,10 @@ function messageBox(data) {
         backdrop: false
     });
 }
+
+function showDataBox(title, content) {
+    var model = $("#showdata-box");
+    model.find(".modal-title").html(title);
+    model.find(".modal-body").html(content);
+    model.modal("show");
+}

@@ -28,7 +28,7 @@
                 <td>${item.joinTime?string('yyyy-MM-dd')}</td>
                 <td>
                     <button class="btn btn-xs btn-primary" onclick="showLab('/emp/view?id=${item.id}')"><i class="fa fa-search"></i>查看</button>
-                    <button class="btn btn-xs btn-primary" onclick="showLab('/emp/edit?id=${item.id}')"><i class="fa fa-search"></i>编辑</button>
+                    <button class="btn btn-xs btn-primary" onclick="showLab('/emp/edit?id=${item.id}')"><i class="fa fa-edit"></i>编辑</button>
                 </td>
             </tr>
             </#list>

@@ -80,15 +80,25 @@ public class EmpController {
     @GetMapping("/holiday")
     public String getList(LoginInfo loginInfo, ModelMap modelMap) {
         final Emp loginEmp = loginInfo.getEmp();
-        List<Vacate> vacateList = vacateService.getList(loginEmp.getDepartmentId());
+        List<Vacate> vacateList = vacateService.getListByDepartment(loginEmp.getDepartmentId());
 
         modelMap.put("list", vacateList);
+        modelMap.put("isMaster", true);
         return view("vacate_list");
     }
 
-    @GetMapping("/holidayApply")
+    @GetMapping("/holidayNewApply")
     public String holidayApply() {
         return view("holidayApply");
+    }
+
+    @GetMapping("/holidayApply")
+    public String holidayList(LoginInfo loginInfo, ModelMap modelMap) {
+        final Emp loginEmp = loginInfo.getEmp();
+        List<Vacate> list = vacateService.getListByEmpId(loginEmp.getId());
+        modelMap.put("list", list);
+        modelMap.put("isMaster", false);
+        return view("vacate_list");
     }
 
     @PostMapping("/submitVacate")
@@ -98,5 +108,17 @@ public class EmpController {
         Result result = new Result();
         vacateService.newVacate(text, timeRange, loginEmp);
         return result;
+    }
+
+    @PostMapping("/accessOrDeniedVacate")
+    @ResponseBody
+    public Result accessOrDeniedVacate(Long id, String type, LoginInfo loginInfo) {
+        final Emp loginEmp = loginInfo.getEmp();
+        if ("access".equals(type)) {
+            vacateService.access(id, loginEmp);
+        } else if ("denied".equals(type)) {
+            vacateService.denied(id, loginEmp);
+        }
+        return new Result();
     }
 }

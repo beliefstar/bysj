@@ -26,14 +26,28 @@ public class VacateServiceImpl implements VacateService {
     }
 
     @Override
-    public List<Vacate> getList(Long departmentId) {
+    public List<Vacate> getListByDepartment(Long departmentId) {
         List<Vacate> vacates;
         try {
-            vacates = vacateMapper.getAll(departmentId);
+            vacates = vacateMapper.getAllByDepartment(departmentId);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ServiceException(e);
         }
+        return vacates;
+    }
+
+    @Override
+    public List<Vacate> getListByEmpId(Long empId) {
+
+        List<Vacate> vacates;
+        try {
+            vacates = vacateMapper.getAllByEmpId(empId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException(e);
+        }
+
         return vacates;
     }
 
@@ -74,6 +88,44 @@ public class VacateServiceImpl implements VacateService {
 
         try {
             vacateMapper.insertSelective(vacate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public void access(Long id, Emp opa) {
+        Vacate vacate = new Vacate();
+        vacate.setId(id);
+        vacate.setApproveId(opa.getId());
+        Date date = new Date();
+        vacate.setDealTime(date);
+        vacate.setStatus("1");
+
+        vacate.setUpdateTime(date);
+        vacate.setUpdateUser(opa.getName());
+        try {
+            vacateMapper.updateByPrimaryKeySelective(vacate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public void denied(Long id, Emp opa) {
+        Vacate vacate = new Vacate();
+        vacate.setId(id);
+        vacate.setApproveId(opa.getId());
+        Date date = new Date();
+        vacate.setDealTime(date);
+        vacate.setStatus("2");
+
+        vacate.setUpdateTime(date);
+        vacate.setUpdateUser(opa.getName());
+        try {
+            vacateMapper.updateByPrimaryKeySelective(vacate);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ServiceException(e);

@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
+	  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
 </head>
 <body>
 	<form action="#">
@@ -16,5 +17,53 @@
 			console.log("ss");
 		}
 	</script>
+<button onclick="fun()">button</button>
+	<div class="modal fade" id="showdata-box">
+	    <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">&times;</span></button>
+	                <h4 class="modal-title">详细信息</h4>
+	            </div>
+	            <div class="modal-body">
+	                <div class="row">
+	                	<div class="col-sm-3"> <label for="">请假人：</label></div>
+	                	<div class="col-sm-9">张云</div>
+	                </div>
+	                <div class="row">
+	                	<div class="col-sm-3"> <label for="">请假时间：</label></div>
+	                	<div class="col-sm-9">2018/04/02 - 2018/05/02</div>
+	                </div>
+	                <div class="row">
+	                	<div class="col-sm-3"> <label for="">申请信息：</label></div>
+	                	<div class="col-sm-9">老子就是要请假</div>
+	                </div>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	            </div>
+	        </div>
+	        <!-- /.modal-content -->
+	    </div>
+	    <!-- /.modal-dialog -->
+	</div>
+<script src="plugins/jQuery/jQuery-2.1.4.min.js"></script>
+<!-- Bootstrap 3.3.5 -->
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+	function fun() {
+		$("#showdata-box").modal("show");
+	}
+</script>
+
+<!-- <script type="text/javascript" src="https://api.douban.com/v2/movie/us_box" id="data"></script> -->
+<script type="text/javascript">
+	fetch("https://api.douban.com/v2/movie/us_box").then(function(r){
+		console.log(r);
+	})
+	alert(d);
+	console.log(d);
+</script>
 </body>
 </html>

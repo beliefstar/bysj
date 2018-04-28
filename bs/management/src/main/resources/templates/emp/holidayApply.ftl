@@ -33,7 +33,7 @@
     </div>
     <!-- /.box-body -->
     <div class="box-footer">
-      <button type="button" class="btn btn-default" onclick="showLab('${backUrl!}')">返回</button>
+      <button type="button" class="btn btn-default" onclick="showLab('/emp/holidayApply')">返回</button>
       <button type="submit" class="btn btn-info pull-right">提交</button>
     </div>
     <!-- /.box-footer -->
