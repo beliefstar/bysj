@@ -15,7 +15,7 @@ public class UUIDGenerate {
 //        EmpExample empExample = (EmpExample) emp;//no
 //        System.out.println(empExample);
 
-        String str = "16678784545123456";
+        String str = "123456";
         str = DigestUtils.md5DigestAsHex(str.getBytes("UTF-8"));
         System.out.println(str);
     }

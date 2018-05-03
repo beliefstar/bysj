@@ -6,4 +6,14 @@
         select COUNT(*) from WHERE email=#{email};
     </select>
 
+    <select id="findByIds" resultType="emp">
+        SELECT * FROM emp
+        <if test="ids.size() > 0">
+            WHERE id in
+            <foreach collection="ids" separator="," open="(" close=")" item="item">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
 </mapper>

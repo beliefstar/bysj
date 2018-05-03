@@ -208,5 +208,15 @@ public class EmpServiceImpl implements EmpService {
         return list;
     }
 
-
+    @Override
+    public List<Emp> findByIds(List<Long> ids) {
+        List<Emp> list;
+        try {
+            list = empMapper.findByIds(ids);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException(e);
+        }
+        return list;
+    }
 }

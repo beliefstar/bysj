@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">
+</head>
+<body>
+
+<button>button</button>
+
+<input type="checkbox">
+<input type="checkbox">
+<input type="checkbox">
+
+<script src="plugins/jQuery/jQuery-2.1.4.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script>
+    $("button").click(function () {
+        $("input[type=checkbox]")[0].checked = true;
+    })
+
+
+</script>
+</body>
+</html>

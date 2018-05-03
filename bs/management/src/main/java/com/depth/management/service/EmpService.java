@@ -27,5 +27,5 @@ public interface EmpService {
 
     void update(Emp emp, String opeUser);
 
-
+    List<Emp> findByIds(List<Long> ids);
 }

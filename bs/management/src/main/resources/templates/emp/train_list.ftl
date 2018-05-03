@@ -3,7 +3,7 @@
 <#--********************************************-->
 <div class="box box-success load-content">
     <div class="box-header">
-
+        <button class="btn btn-primary" onclick="showLab('/emp/newTrainUI')">新培训</button>
     </div>
     <!-- /.box-header -->
     <div class="box-body">
@@ -11,27 +11,32 @@
             <thead>
             <tr>
                 <th>编号</th>
-                <th>姓名</th>
-                <th>性别</th>
-                <th>职位</th>
-                <th>入职时间</th>
+                <th>标题</th>
+                <th>开始时间</th>
+                <th>结束时间</th>
+                <th>发布者</th>
                 <th>操作</th>
             </tr>
             </thead>
             <tbody>
-            <#list empList as item>
+            <#if list?size gt 0>
+            <#list list as item>
             <tr>
                 <td>${item_index}</td>
-                <td>${item.name}</td>
-                <td>${item.age}</td>
-                <td>${item.post}</td>
-                <td>${item.joinTime?string('yyyy-MM-dd')}</td>
+                <td data-title="true">${item.title!}</td>
+                <td>${item.startTime?string('yyyy-MM-dd HH:mm:ss')}</td>
+                <td>${item.endTime?string('yyyy-MM-dd HH:mm:ss')}</td>
+                <td>${item.publisherEmp.name!}</td>
                 <td>
-                    <button class="btn btn-xs btn-primary" onclick="showLab('/emp/view?id=${item.id}')"><i class="fa fa-search"></i>查看</button>
-                    <button class="btn btn-xs btn-primary" onclick="showLab('/emp/edit?id=${item.id}')"><i class="fa fa-edit"></i>编辑</button>
+                    <button class="btn btn-xs btn-primary" onclick="showLab('/emp/newTrainUI?trainId=' + ${item.id} + '')"><i class="fa fa-search"></i>查看</button>
                 </td>
             </tr>
             </#list>
+            <#else >
+            <tr>
+                <td colspan="6" style="text-align: center"> --- 无相关数据 --- </td>
+            </tr>
+            </#if>
             </tbody>
         </table>
     </div>
@@ -60,5 +65,6 @@
             "zeroRecords": "无相关数据"
         }
     });
+
 
 </script>

@@ -10,7 +10,7 @@
     <div class="box-body">
         <div class="row">
             <div class="col-sm-2 text-center">
-                <img class="img-responsive img-bordered center-block" src="${emp.img!"dist/img/user_img.png"}" alt="User profile picture">
+                <img class="img-responsive img-bordered center-block" src="${emp.img!"dist/img/user_img.jpg"}" alt="User profile picture">
             </div>
             <div class="col-sm-5">
                 <ul>
@@ -49,21 +49,4 @@
                     <p class="detail-indent">${emp.politics!}</p>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-sm-6">
-                    <b>家庭住址：</b><br>
-                    <p class="detail-indent">${emp.address!}</p>
-                </div>
-                <div class="col-sm-6">
-                    <b>政治面貌：</b><br>
-                    <p class="detail-indent">${emp.politics!}</p>
-                </div>
-            </div>
-        </div>
-        <ul class="list-group list-group-unbordered">
-            <li class="list-group-item">
-                <b>家庭住址：</b>${emp.address!} <a class="pull-right">543</a>
-            </li>
-        </ul>
-
     </div>

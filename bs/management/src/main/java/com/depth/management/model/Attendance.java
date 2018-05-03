@@ -1,12 +1,8 @@
 package com.depth.management.model;
 
 import com.depth.management.common.BaseEntity;
-import com.sun.xml.internal.bind.v2.model.core.ID;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -14,6 +10,7 @@ import java.util.Date;
  */
 @Table(name = "attendance")
 public class Attendance extends BaseEntity {
+
     private static final long serialVersionUID = -7996308356707681063L;
 
     @Id
@@ -23,6 +20,9 @@ public class Attendance extends BaseEntity {
      * 员工ID
      */
     private Long empId;
+
+    @Transient
+    private Emp emp;
     /**
      * 上班时间
      */
@@ -32,7 +32,25 @@ public class Attendance extends BaseEntity {
      */
     private Date endTime;
 
+    private String dateUuid;
+
     public Attendance() {
+    }
+
+    public String getDateUuid() {
+        return dateUuid;
+    }
+
+    public void setDateUuid(String dateUuid) {
+        this.dateUuid = dateUuid;
+    }
+
+    public Emp getEmp() {
+        return emp;
+    }
+
+    public void setEmp(Emp emp) {
+        this.emp = emp;
     }
 
     public Long getId() {

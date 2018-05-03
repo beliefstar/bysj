@@ -2,10 +2,7 @@ package com.depth.management.model;
 
 import com.depth.management.common.BaseEntity;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * 薪资表
@@ -21,6 +18,9 @@ public class Salary extends BaseEntity {
      * 员工ID
      */
     private Long empId;
+
+    @Transient
+    private Emp emp;
     /**
      * 基本工资
      */
@@ -39,6 +39,14 @@ public class Salary extends BaseEntity {
     private String comment;
 
     public Salary() {
+    }
+
+    public Emp getEmp() {
+        return emp;
+    }
+
+    public void setEmp(Emp emp) {
+        this.emp = emp;
     }
 
     public Long getId() {

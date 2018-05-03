@@ -11,4 +11,6 @@ public interface AdjustmentApplyService {
     List<AdjustmentApply> findByOrigin(Long departmentId);
 
     List<AdjustmentApply> findByArrive(Long departmentId);
+
+    void update(AdjustmentApply apply, Emp loginEmp);
 }

@@ -2,10 +2,7 @@ package com.depth.management.model;
 
 import com.depth.management.common.BaseEntity;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -39,7 +36,18 @@ public class Train extends BaseEntity {
      */
     private Long publisher;
 
+    @Transient
+    private Emp publisherEmp;
+
     public Train() {
+    }
+
+    public Emp getPublisherEmp() {
+        return publisherEmp;
+    }
+
+    public void setPublisherEmp(Emp publisherEmp) {
+        this.publisherEmp = publisherEmp;
     }
 
     public Long getId() {

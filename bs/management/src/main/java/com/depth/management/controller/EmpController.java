@@ -2,14 +2,8 @@ package com.depth.management.controller;
 
 import com.depth.management.common.exception.TurnErrorException;
 import com.depth.management.common.vo.Result;
-import com.depth.management.model.AdjustmentApply;
-import com.depth.management.model.Department;
-import com.depth.management.model.Emp;
-import com.depth.management.model.Vacate;
-import com.depth.management.service.AdjustmentApplyService;
-import com.depth.management.service.DepartmentService;
-import com.depth.management.service.EmpService;
-import com.depth.management.service.VacateService;
+import com.depth.management.model.*;
+import com.depth.management.service.*;
 import com.depth.management.session.LoginInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -31,17 +26,23 @@ public class EmpController {
     private final DepartmentService departmentService;
     private final VacateService vacateService;
     private final AdjustmentApplyService adjustmentApplyService;
+    private final TrainService trainService;
 
     @Autowired
-    public EmpController(EmpService empService, DepartmentService departmentService, VacateService vacateService, AdjustmentApplyService adjustmentApplyService) {
+    public EmpController(EmpService empService, DepartmentService departmentService, VacateService vacateService, AdjustmentApplyService adjustmentApplyService, TrainService trainService) {
         this.empService = empService;
         this.departmentService = departmentService;
         this.vacateService = vacateService;
         this.adjustmentApplyService = adjustmentApplyService;
+        this.trainService = trainService;
     }
 
     @GetMapping("/view")
-    public String showDetail(Long id, ModelMap modelMap) {
+    public String showDetail(Long id, LoginInfo loginInfo, ModelMap modelMap) {
+        final Emp loginEmp = loginInfo.getEmp();
+        if (id == null) {
+            id = loginEmp.getId();
+        }
         try {
             Emp emp = empService.findById(id);
             modelMap.put("emp", emp);
@@ -130,19 +131,40 @@ public class EmpController {
     @GetMapping("/adjustment")
     public String adjustment(String type, LoginInfo loginInfo, ModelMap modelMap) {
         final Emp loginEmp = loginInfo.getEmp();
+        Department department = departmentService.findById(loginEmp.getDepartmentId());
+
+        type = StringUtils.isEmpty(type) ? "arrive" : type;
         List<AdjustmentApply> list = null;
-        if (StringUtils.isEmpty(type) || "arrive".equals(type)) {
+        if ("arrive".equals(type)) {
             list = adjustmentApplyService.findByArrive(loginEmp.getDepartmentId());
+            list.forEach(item -> item.setArriveName(department.getName()));
         } else if ("origin".equals(type)) {
             list = adjustmentApplyService.findByOrigin(loginEmp.getDepartmentId());
+            list.forEach(item -> item.setOriginName(department.getName()));
         }
         if (list == null) throw new TurnErrorException("空指针");
-        for (AdjustmentApply apply : list) {
-            Emp byId = empService.findById(apply.getEmpId());
-            apply.setEmpName(byId.getName());
-        }
+
         modelMap.put("list", list);
+        modelMap.put("type", type);
         return "/department/adjustmentApply_list";
+    }
+
+    @PostMapping("/dealAdjustApply")
+    @ResponseBody
+    public Result dealAdjustApply(AdjustmentApply apply, LoginInfo loginInfo) {
+        final Emp loginEmp = loginInfo.getEmp();
+        Result result = new Result();
+
+        adjustmentApplyService.update(apply, loginEmp);
+
+        if ("3".equals(apply.getStatus())) {
+            Emp emp = new Emp();
+            emp.setId(apply.getEmpId());
+            emp.setDepartmentId(apply.getArrive());
+
+            empService.update(emp, loginEmp.getName());
+        }
+        return result;
     }
 
     @GetMapping("/newAdjustApply")
@@ -163,7 +185,7 @@ public class EmpController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new TurnErrorException("出错啦");
+            throw new TurnErrorException();
         }
         return "/department/newAdjustApply";
     }
@@ -173,9 +195,50 @@ public class EmpController {
     public Result newAdjustment(AdjustmentApply apply, LoginInfo loginInfo) {
         final Emp loginEmp = loginInfo.getEmp();
         Result result = new Result();
-        System.out.println(apply);
         adjustmentApplyService.newAdjustmentApply(apply, loginEmp);
+        return result;
+    }
 
+    @GetMapping("/train")
+    public String TrainList(LoginInfo loginInfo, ModelMap modelMap) {
+        final Emp logEmp = loginInfo.getEmp();
+
+        List<Train> list = trainService.getListByPublisher(logEmp.getId());
+
+        modelMap.put("list", list);
+        return view("train_list");
+    }
+
+    @GetMapping("/newTrainUI")
+    public String newTrain(Long trainId, LoginInfo loginInfo, ModelMap modelMap) {
+        final Emp logEmp = loginInfo.getEmp();
+        if (trainId != null) {
+            Train train = trainService.findById(trainId);
+            modelMap.put("train", train);
+            List<Long> ids = trainService.findIdsByTrainId(train.getId());
+            modelMap.put("empIds", ids);
+        }
+        List<Emp> list = empService.findByDepartmentId(logEmp.getDepartmentId());
+
+        modelMap.put("empList", list);
+        return view("newTrain");
+    }
+
+    @PostMapping("/newTrain")
+    @ResponseBody
+    public Result newTrain(String type, String[] empIds, Train train, LoginInfo loginInfo) {
+        Result result = new Result();
+        final Emp loginEmp = loginInfo.getEmp();
+
+        if ("create".equals(type)) {
+            train.setPublisher(loginEmp.getId());
+            trainService.save(train, loginEmp);
+
+            trainService.newTrainEmp(empIds, train.getId(), loginEmp);
+        } else if ("update".equals(type)) {
+            trainService.update(train, loginEmp);
+            trainService.changeTrainEmp(empIds, train.getId(), loginEmp);
+        }
         return result;
     }
 }

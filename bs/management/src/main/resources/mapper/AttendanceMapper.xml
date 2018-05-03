@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.depth.management.mapper.AttendanceMapper">
+
+    <select id="findByDateUuid" resultType="attendance">
+        SELECT * FROM attendance WHERE date_uuid=#{uuid}
+    </select>
+
+    <select id="checkKey" resultType="_int">
+        SELECT count(*) FROM attendance_key WHERE `key`=#{key}
+    </select>
+
+    <update id="updateByDateUuidAndEmpId">
+        UPDATE attendance SET end_time=#{endTime}, update_time=NOW(), update_user='api' WHERE emp_id=#{empId} AND date_uuid=#{uuid}
+    </update>
+
+</mapper>

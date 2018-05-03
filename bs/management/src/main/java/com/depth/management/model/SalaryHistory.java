@@ -1,12 +1,8 @@
 package com.depth.management.model;
 
 import com.depth.management.common.BaseEntity;
-import com.sun.xml.internal.bind.v2.model.core.ID;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * 历史薪资表
@@ -22,16 +18,27 @@ public class SalaryHistory extends BaseEntity {
      * 员工ID
      */
     private Long empId;
+
+    @Transient
+    private Emp emp;
     /**
      * 薪资
      */
-    private Double salary;
+    private Integer salary;
     /**
      * 备注
      */
     private String comment;
 
     public SalaryHistory() {
+    }
+
+    public Emp getEmp() {
+        return emp;
+    }
+
+    public void setEmp(Emp emp) {
+        this.emp = emp;
     }
 
     public Long getId() {
@@ -50,11 +57,11 @@ public class SalaryHistory extends BaseEntity {
         this.empId = empId;
     }
 
-    public Double getSalary() {
+    public Integer getSalary() {
         return salary;
     }
 
-    public void setSalary(Double salary) {
+    public void setSalary(Integer salary) {
         this.salary = salary;
     }
 

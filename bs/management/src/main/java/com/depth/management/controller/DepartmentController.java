@@ -1,12 +1,15 @@
 package com.depth.management.controller;
 
 import com.depth.management.common.vo.Result;
+import com.depth.management.model.AdjustmentApply;
 import com.depth.management.model.Department;
 import com.depth.management.model.Emp;
+import com.depth.management.service.AdjustmentApplyService;
 import com.depth.management.service.DepartmentService;
 import com.depth.management.session.LoginInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,12 +42,5 @@ public class DepartmentController {
         List<Department> list = departmentService.findAll();
         result.setData(list);
         return result;
-    }
-
-    @GetMapping("/adjustment")
-    public String adjustment(LoginInfo loginInfo, ModelMap modelMap) {
-        final Emp loginEmp = loginInfo.getEmp();
-
-        return view("newAdjustApply");
     }
 }

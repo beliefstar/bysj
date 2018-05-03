@@ -31,6 +31,6 @@ public class ExceptionController {
 
     @ExceptionHandler(TurnErrorException.class)
     public String TurnErrorExceptionHandler(TurnErrorException e) {
-        return "error/" + e.getMessage();
+        return "error/500";
     }
 }

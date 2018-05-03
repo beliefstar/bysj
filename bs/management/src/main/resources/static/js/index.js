@@ -31,3 +31,24 @@ function showDataBox(title, content) {
     model.find(".modal-body").html(content);
     model.modal("show");
 }
+
+function formBox(title, content, ajax) {
+    var model = $("#form-box");
+    model.find(".modal-title").html(title);
+    model.find(".modal-body").html(content);
+    model.find("form").submit(function () {
+        var data = $(this).serialize();
+        $.ajax({
+            type: ajax.type || "POST",
+            url: ajax.url,
+            data: ajax.data || data,
+            dataType: ajax.dataType || "json",
+            success: function (result) {
+                ajax.success(result);
+            }
+        });
+        model.modal("hide");
+        return false;
+    });
+    model.modal("show");
+}

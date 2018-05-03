@@ -22,13 +22,13 @@ public class ShiroConfig {
     }
 
     @Autowired
-    private AuthRealm realm;
+    private AuthRealm authRealm;
 
     @Bean
     public DefaultWebSecurityManager defaultWebSecurityManager() {
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
         manager.setCacheManager(ehCacheManager());
-        manager.setRealm(realm);
+        manager.setRealm(authRealm);
         return manager;
     }
 
@@ -42,6 +42,7 @@ public class ShiroConfig {
         map.put("/dist/**", "anon");
         map.put("/login_assets/**", "anon");
         map.put("/plugins/**", "anon");
+        map.put("/attendance/*/*", "anon");
         map.put("/account/login", "anon");
         map.put("/account/logout", "logout");
         map.put("/**", "authc");

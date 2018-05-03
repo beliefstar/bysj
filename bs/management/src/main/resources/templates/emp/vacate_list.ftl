@@ -38,7 +38,7 @@
                 <td>
                     <div style="display: none;">${item.text!}</div>
                     <button class="btn btn-xs btn-primary" onclick="showDetail(this)"><i class="fa fa-search"></i>查看</button>
-                    <#if isMaster>
+                    <#if isMaster && item.status=="0">
                         <button class="btn btn-xs btn-primary" onclick="accessVacate(${item.id}, 'access')"><i class="fa fa-check-square-o"></i>通过</button>
                         <button class="btn btn-xs btn-primary" onclick="accessVacate(${item.id}, 'denied')"><i class="fa fa-ban"></i>拒绝</button>
                     </#if>
@@ -65,7 +65,17 @@
         "language": {
             "info": "当前第 _PAGE_ 页 ，共 _PAGES_ 页",
             "lengthMenu": "显示 _MENU_ 条记录",
-            "infoFiltered": "（从 _MAX_ 条数据中查询）"
+            "infoFiltered": "（从 _MAX_ 条数据中查询）",
+            "paginate": {
+                "first": "首页",
+                "last": "尾页",
+                "next": "下一页",
+                "previous": "上一页"
+            },
+            "emptyTable": "无相关数据",
+            "infoEmpty": "无相关数据",
+            "search": "搜索:",
+            "zeroRecords": "无相关数据"
         }
     });
 </#if>

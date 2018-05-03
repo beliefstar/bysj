@@ -44,13 +44,9 @@ public class AdjustmentApplyServiceImpl implements AdjustmentApplyService {
 
     @Override
     public List<AdjustmentApply> findByOrigin(Long departmentId) {
-        Example example = new Example(AdjustmentApply.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("origin", departmentId);
-        example.orderBy("updateTime").desc();
         List<AdjustmentApply> applyList;
         try {
-            applyList = adjustmentApplyMapper.selectByExample(example);
+            applyList = adjustmentApplyMapper.findByOrigin(departmentId);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ServiceException(e);
@@ -60,17 +56,33 @@ public class AdjustmentApplyServiceImpl implements AdjustmentApplyService {
 
     @Override
     public List<AdjustmentApply> findByArrive(Long departmentId) {
-        Example example = new Example(AdjustmentApply.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("arrive", departmentId);
-        example.orderBy("updateTime").desc();
+
         List<AdjustmentApply> applyList;
         try {
-            applyList = adjustmentApplyMapper.selectByExample(example);
+            applyList = adjustmentApplyMapper.findByArrive(departmentId);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ServiceException(e);
         }
         return applyList;
+    }
+
+    @Override
+    public void update(AdjustmentApply apply, Emp loginEmp) {
+        if (apply.getId() != null) {
+            Date date = new Date();
+            apply.setUpdateTime(date);
+            apply.setUpdateUser(loginEmp.getName());
+            apply.setArriveApprove(loginEmp.getId());
+            apply.setArriveDealTime(date);
+            try {
+                adjustmentApplyMapper.updateByPrimaryKeySelective(apply);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new ServiceException(e);
+            }
+        } else {
+            throw new ServiceException("ID为空");
+        }
     }
 }
