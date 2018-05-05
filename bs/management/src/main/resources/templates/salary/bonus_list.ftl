@@ -29,11 +29,8 @@
             <tr>
                 <th>编号</th>
                 <th>姓名</th>
-                <th>基本工资</th>
                 <th>奖金</th>
                 <th>补贴</th>
-                <th>纳税额</th>
-                <th>应收工资额</th>
                 <th>操作</th>
             </tr>
             </thead>
@@ -42,16 +39,13 @@
             <tr>
                 <td>${item_index + 1}</td>
                 <td><a href="javascript:void(0)" onclick="showLab('/emp/view?id=' + ${item.emp.id} + '')">${item.emp.name}</a></td>
-                <td data-income="true">${item.base?string("0.00")}</td>
                 <td data-bonus="true">${item.bonus?string("0.00")}</td>
                 <td data-subsidy="true">${item.subsidy?string("0.00")}</td>
-                <td data-tax="true">0</td>
-                <td data-realIncome="true">0</td>
                 <td>
-                    <button class="btn btn-xs btn-primary" onclick="adjustBonus(this)"><i class="fa fa-edit"></i>设置奖金/补贴</button>
+                    <button class="btn btn-sm btn-primary" onclick="adjustBonus(this)"><i class="fa fa-edit"></i>设置奖金/补贴</button>
                     <div style="display: none;">
-                        <button class="btn btn-xs btn-success" onclick="submitRow(${item.id}, this)">确定</button>
-                        <button class="btn btn-xs btn-success" onclick="cancel(this)">取消</button>
+                        <button class="btn btn-sm btn-success" onclick="submitRow(${item.id}, this)">确定</button>
+                        <button class="btn btn-sm btn-success" onclick="cancel(this)">取消</button>
                     </div>
                 </td>
             </tr>
@@ -63,48 +57,6 @@
 </div>
 <#--********************************************-->
 <script>
-    function computeIncome() {
-        $("#tbody${uuid}").find("tr").each(function () {
-            var realIncome = $(this).find("td[data-realIncome]");
-            var tax = $(this).find("td[data-tax]");
-            var income = $(this).find("td[data-income]");
-            var bonus = $(this).find("td[data-bonus]");
-            var subsidy = $(this).find("td[data-subsidy]");
-
-            var rel = compute(parseInt(income.html()));
-            tax.html(rel.tax);
-            var real = parseInt(rel.realIncome) + parseInt(bonus.html()) + parseInt(subsidy.html());
-            realIncome.html(real.toFixed(2));
-        })
-    }
-
-    function compute(income) {
-        var taxableIncome = income - 3500;
-        if(taxableIncome <=0){
-            return {
-                tax: 0,
-                realIncome: income.toFixed(2)
-            }
-        }
-        var R,Q;
-        var A=taxableIncome;
-        A=A.toFixed(2);
-        if(A<=1500){R=0.03;Q=0;}
-        else if(A>1500 && A<=4500){R=0.1;Q=105}
-        else if(A>4500 && A<=9000){R=0.2;Q=555}
-        else if(A>9000 && A<=35000){R=0.25;Q=1005}
-        else if(A>35000 && A<=55000){R=0.3;Q=2755}
-        else if(A>55000 && A<=80000){R=0.35;Q=5505}
-        else{R=0.45;Q=13505;}
-        var tax=taxableIncome * R -Q;
-        var realIncome=income - tax;
-
-        return {
-            tax: tax.toFixed(2),
-            realIncome: realIncome.toFixed(2)
-        }
-    }
-    computeIncome();
 </script>
 <script src="/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="/plugins/datatables/dataTables.bootstrap.min.js"></script>

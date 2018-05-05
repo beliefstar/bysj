@@ -5,7 +5,7 @@ spring:
     username: zhenxin
     password: 123456
   druid:
-  #连接池的配置信息
+  #连接池的配置信息119.29.214.244
   ## 初始化大小，最小，最大
     initial-size: 5
     min-idle: 5
@@ -24,6 +24,10 @@ spring:
     max-pool-prepared-statement-per-connection-size: 20
     # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
     filters: stat
+#  data:
+#    elasticsearch:
+#      cluster-name: my-application
+#      cluster-nodes: localhost:9300
 mybatis:
   type-aliases-package: com.depth.management.model
   mapperLocations: "classpath:mapper/*.xml"

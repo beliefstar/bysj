@@ -32,17 +32,29 @@ public class Attendance extends BaseEntity {
      */
     private Date endTime;
 
-    private String dateUuid;
+    private Double hour;
+    /**
+     * 0没吃到，1迟到
+     */
+    private String last;
 
     public Attendance() {
     }
 
-    public String getDateUuid() {
-        return dateUuid;
+    public String getLast() {
+        return last;
     }
 
-    public void setDateUuid(String dateUuid) {
-        this.dateUuid = dateUuid;
+    public void setLast(String last) {
+        this.last = last;
+    }
+
+    public Double getHour() {
+        return hour;
+    }
+
+    public void setHour(Double hour) {
+        this.hour = hour;
     }
 
     public Emp getEmp() {

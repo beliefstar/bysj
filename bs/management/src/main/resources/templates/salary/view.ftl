@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap.css">
 <div class="row">
     <div class="col-md-6">
-        <div class="box box-primary">
+        <div class="box box-primary load-content">
             <div class="box-header with-border">
                 <h3 class="box-title">基本信息</h3>
 
@@ -24,7 +24,7 @@
         </div>
 
 
-        <div class="box box-danger">
+        <div class="box box-danger load-content">
             <div class="box-header with-border">
                 <h3 class="box-title">历史工资</h3>
 
@@ -63,7 +63,7 @@
 
     <div class="col-md-6">
 
-        <div class="box box-info">
+        <div class="box box-info load-content">
             <div class="box-header with-border">
                 <h3 class="box-title">历史曲线</h3>
 
@@ -93,7 +93,7 @@
                 <#if index1 lt 11>
                     <#assign index1++>
                     "${item.createTime?string("yyyy/MM")}"
-                    <#if index1 lt 10>,</#if>
+                    <#if index1 lt 11>,</#if>
                 </#if>
             </#list>
         ],
@@ -112,7 +112,7 @@
                         <#if index2 lt 11>
                             <#assign index2++>
                             ${item.salary?c}
-                            <#if index2 lt 10>,</#if>
+                            <#if index2 lt 11>,</#if>
                         </#if>
                     </#list>
                 ]
@@ -180,8 +180,7 @@
             realIncome.html(real.toFixed(2));
     }
 
-    function compute(income)
-    {
+    function compute(income) {
         var taxableIncome = income - 3500;
         if(taxableIncome <=0){
             return {

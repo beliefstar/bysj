@@ -2,16 +2,94 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.depth.management.mapper.AttendanceMapper">
 
-    <select id="findByDateUuid" resultType="attendance">
-        SELECT * FROM attendance WHERE date_uuid=#{uuid}
-    </select>
-
     <select id="checkKey" resultType="_int">
         SELECT count(*) FROM attendance_key WHERE `key`=#{key}
     </select>
 
-    <update id="updateByDateUuidAndEmpId">
-        UPDATE attendance SET end_time=#{endTime}, update_time=NOW(), update_user='api' WHERE emp_id=#{empId} AND date_uuid=#{uuid}
+    <select id="findAttendanceTime" resultType="attendanceTime">
+        SELECT * FROM attendance_time WHERE department_id=#{departmentId}
+    </select>
+
+    <select id="findVoByEmpIds" resultType="com.depth.management.common.vo.AttendanceVo">
+        SELECT a.emp_id, a.sum lastNumber, b.count leaveNumber from
+        (SELECT emp_id, SUM(last) sum from attendance
+        <where>
+            <if test="ids.size() > 0">
+                emp_id in
+                <foreach collection="ids" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="lTime != null and rTime != null">
+                AND create_time BETWEEN #{lTime} AND #{rTime}
+            </if>
+        </where>
+        GROUP BY emp_id) a,
+        (SELECT emp_id , COUNT(*) count from attendance
+        <where>
+            <if test="ids.size() > 0">
+                emp_id in
+                <foreach collection="ids" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="lTime != null and rTime != null">
+                AND create_time BETWEEN #{lTime} AND #{rTime}
+            </if>
+            and hour &lt; #{hour}
+        </where>
+         GROUP BY emp_id) b
+        WHERE a.emp_id=b.emp_id
+    </select>
+
+    <select id="findVoOutNumberByEmpIds" resultType="com.depth.management.common.vo.AttendanceVo">
+        SELECT emp_id, COUNT(*) out_number
+        FROM attendance
+        <where>
+            <if test="ids.size() > 0">
+                emp_id in
+                <foreach collection="ids" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="lTime != null and rTime != null">
+                AND create_time BETWEEN #{lTime} AND #{rTime}
+            </if>
+                AND start_time is NULL
+        </where>
+        GROUP BY emp_id
+    </select>
+
+    <select id="findWeekDay" resultType="string">
+        SELECT `day` FROM week_day WHERE id=1
+    </select>
+
+    <select id="findHolidayAll" resultType="holiday">
+        SELECT * FROM holidays
+    </select>
+
+    <update id="updateWeekDay">
+        UPDATE week_day SET `day` = #{weekday} WHERE id=1
     </update>
+
+    <update id="updateAttendanceTime" parameterType="attendanceTime">
+        UPDATE attendance_time
+        <set>
+            <if test="startTime != null">
+              start_time=#{startTime},
+            </if>
+            <if test="endTime != null">
+                end_time=#{endTime},
+            </if>
+        </set>
+        <where>
+            department_id=#{departmentId}
+        </where>
+    </update>
+
+    <insert id="addHoliday" parameterType="holiday">
+        INSERT INTO holidays VALUES(null, #{weekDate}, #{comment})
+    </insert>
+
 
 </mapper>

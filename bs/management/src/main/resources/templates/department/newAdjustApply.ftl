@@ -1,7 +1,7 @@
 <#assign uuid=.now?string["hhmmSSsss"]/>
 <link rel="stylesheet" href="/plugins/select2/select2.min.css">
 
-<div class="box box-primary">
+<div class="box box-primary load-content">
     <div class="box-header with-border">
         <h3 class="box-title">新建调度</h3>
     </div>

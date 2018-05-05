@@ -18,5 +18,12 @@ public class UUIDGenerate {
         String str = "123456";
         str = DigestUtils.md5DigestAsHex(str.getBytes("UTF-8"));
         System.out.println(str);
+
+        String str2 = "2018/04/01";
+        str2 = DigestUtils.md5DigestAsHex(str2.getBytes("UTF-8"));
+        System.out.println(str2);
+
+        String a = "0" + (8+1) + ":";
+        System.out.println(a);
     }
 }

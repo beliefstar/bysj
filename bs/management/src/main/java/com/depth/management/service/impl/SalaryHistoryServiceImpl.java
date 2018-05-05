@@ -31,7 +31,6 @@ public class SalaryHistoryServiceImpl implements SalaryHistoryService {
         example.orderBy("id").asc();
         try {
             List<SalaryHistory> sh = salaryHistoryMapper.selectByExample(example);
-//            sh = sh.stream().limit(10).collect(Collectors.toList());
             List<Long> ids = sh.stream().map(SalaryHistory::getEmpId).collect(Collectors.toList());
             List<Emp> emps = empService.findByIds(ids);
             sh.forEach(item -> emps.forEach(v -> {

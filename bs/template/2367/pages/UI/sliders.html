@@ -798,14 +798,20 @@
     /* ION SLIDER */
     $("#range_1").ionRangeSlider({
       min: 0,
-      max: 5000,
-      from: 1000,
-      to: 4000,
+      max: 24,
+      from: 0,
+      to: 24,
       type: 'double',
-      step: 1,
-      prefix: "$",
+      step: 0.5,
+      // prefix: "$",
+        // postfix: " mm",
       prettify: false,
-      hasGrid: true
+      hasGrid: true,
+        onFinish: function (obj) {
+            var val = obj.fromNumber + ";" + obj.toNumber;
+            // console.log();
+            $("#range_1").val(val);
+        }
     });
     $("#range_2").ionRangeSlider();
 
