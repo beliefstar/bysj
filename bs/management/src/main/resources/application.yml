@@ -42,7 +42,7 @@ logging:
       depth:
         management:
           mapper: debug
+  file: logs/management.log
 server:
   port: 8089
-#  file: logs/management.log\
 
