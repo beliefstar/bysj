@@ -80,7 +80,7 @@ public class AttendanceApi {
 
         boolean flag = attendanceService.checkHasDayData(parse);
         if (flag) {
-            logger.info("已经有" + date + "的考勤数据");
+            logger.info("已经有" + new SimpleDateFormat().format(date) + "的考勤数据");
             return;
         }
 

@@ -262,8 +262,8 @@
               <small>Optional description</small>
           </h1>
           <ol class="breadcrumb">
-              <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-              <li class="active">Here</li>
+              <#--<li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>-->
+              <#--<li class="active">Here</li>-->
           </ol>
       </section>
 
@@ -391,7 +391,7 @@
                 <p>One fine body&hellip;</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>
         <!-- /.modal-content -->

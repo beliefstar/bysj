@@ -48,6 +48,8 @@ public class Emp extends BaseEntity {
      * 民族
      */
     private String nation;
+
+    private String img;
     /**
      * 政治面貌
      */
@@ -94,6 +96,18 @@ public class Emp extends BaseEntity {
     private String delFlg;
 
     public Emp() {
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public void setDepartmentId(Long departmentId) {
+        this.departmentId = departmentId;
     }
 
     public String getPassword() {

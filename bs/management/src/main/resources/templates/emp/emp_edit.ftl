@@ -3,28 +3,37 @@
 
   <form class="form-horizontal" id="form${uuid}">
     <div class="box-body">
-        <#if emp.id??>
+
+        <div class="text-center margin">
+            <img src="<#if emp??>${emp.img!"dist/img/user_img.jpg"}<#else >dist/img/user_img.jpg</#if>" alt="头像" width="200px">
+            <div style="position: relative;">
+                <input type="file" style="position: absolute; width: 100%;height: 100%;top: 0;left: 0;opacity: 0;" id="imgFile">
+                <a href="javascript:void(0)">点击更换</a>
+            </div>
+        </div>
+
+        <#if emp?? && emp.id??>
             <input type="hidden" name="id" value="${emp.id}">
         </#if>
       <div class="form-group">
         <label for="inputEmail3" class="col-sm-2 control-label">姓名 :</label>
 
         <div class="col-sm-10">
-          <input type="text" name="name" class="form-control" required value="${emp.name!}">
+          <input type="text" name="name" class="form-control" required value="<#if emp??>${emp.name!}</#if>">
         </div>
       </div>
       <div class="form-group">
         <label for="inputtext3" class="col-sm-2 control-label">年龄 :</label>
 
         <div class="col-sm-10">
-          <input type="number" name="age" class="form-control" required value="${emp.age!}">
+          <input type="number" name="age" class="form-control" required value="<#if emp??>${emp.age!}</#if>">
         </div>
       </div>
       <div class="form-group">
         <label for="inputtext3" class="col-sm-2 control-label">性别 :</label>
           <#assign gender1 = "">
           <#assign gender2 = "">
-        <#if emp.gender??>
+        <#if emp?? && emp.gender??>
             <#if emp.gender == "男">
                 <#assign gender1 = "selected">
             <#else >
@@ -42,55 +51,55 @@
         <label for="inputtext3" class="col-sm-2 control-label">民族 :</label>
 
         <div class="col-sm-10">
-          <input type="text" name="nation" class="form-control" required value="${emp.nation!}">
+          <input type="text" name="nation" class="form-control" required value="<#if emp??>${emp.nation!}</#if>">
         </div>
       </div>
       <div class="form-group">
         <label for="inputtext3" class="col-sm-2 control-label">政治面貌 :</label>
 
         <div class="col-sm-10">
-          <input type="text" name="politics" class="form-control" required value="${emp.nation!}">
+          <input type="text" name="politics" class="form-control" required value="<#if emp??>${emp.nation!}</#if>">
         </div>
       </div>
       <div class="form-group">
         <label for="inputtext3" class="col-sm-2 control-label">家庭住址 :</label>
 
         <div class="col-sm-10">
-          <input type="text" name="address" class="form-control" required value="${emp.address!}">
+          <input type="text" name="address" class="form-control" required value="<#if emp??>${emp.address!}</#if>">
         </div>
       </div>
       <div class="form-group">
         <label for="inputtext3" class="col-sm-2 control-label">生日 :</label>
         <div class="col-sm-10">
-            <input type="text" name="birthday" class="form-control" id="birthday" required readonly value="<#if emp.birthday??>${emp.birthday?string('yyyy/MM/dd')}</#if>">
+            <input type="text" name="birthday" class="form-control" id="birthday" required readonly value="<#if emp?? && emp.birthday??>${emp.birthday?string('yyyy/MM/dd')}</#if>">
         </div>
       </div>
       <div class="form-group">
         <label for="inputtext3" class="col-sm-2 control-label">联系电话 :</label>
 
         <div class="col-sm-10">
-          <input type="text" name="phone" class="form-control" required <#if emp.phone??> value="${emp.phone}" readonly</#if>>
+          <input type="text" name="phone" class="form-control" required <#if emp?? && emp.phone??> value="${emp.phone}" readonly</#if>>
         </div>
       </div>
       <div class="form-group">
         <label for="inputtext3" class="col-sm-2 control-label">邮箱 :</label>
 
         <div class="col-sm-10">
-          <input type="email" name="email" class="form-control" required readonly value="${emp.email!}">
+          <input type="email" name="email" class="form-control" required <#if emp??>readonly value="${emp.email!}</#if>">
         </div>
       </div>
       <div class="form-group">
         <label for="inputtext3" class="col-sm-2 control-label">毕业院校 :</label>
 
         <div class="col-sm-10">
-          <input type="text" name="school" class="form-control" required value="${emp.school!}">
+          <input type="text" name="school" class="form-control" required value="<#if emp??>${emp.school!}</#if>">
         </div>
       </div>
       <div class="form-group">
         <label for="inputtext3" class="col-sm-2 control-label">学历 :</label>
 
         <div class="col-sm-10">
-          <input type="text" name="education" class="form-control" required value="${emp.education!}">
+          <input type="text" name="education" class="form-control" required value="<#if emp??>${emp.education!}</#if>">
         </div>
       </div>
 
@@ -120,6 +129,26 @@
 
 
 <script>
+
+    $("#imgFile").change(function () {
+        var formData = new FormData();
+        formData.append('file', $(this)[0].files[0]);
+        jQuery.ajax({
+            url: '/emp/upImg',
+            type: 'POST',
+            cache: false,
+            data: formData,
+            processData: false,
+            contentType: false
+        }).done(function (result) {
+            if (result.status === 200) {
+                messageBox("操作成功");
+            } else {
+                messageBox("操作失败")
+            }
+        });
+    });
+
     $('#birthday').datepicker({
         language: "zh-CN",
         format: "yyyy/mm/dd"

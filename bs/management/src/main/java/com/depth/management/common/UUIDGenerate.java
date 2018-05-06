@@ -3,10 +3,13 @@ package com.depth.management.common;
 import com.depth.management.model.Emp;
 import org.springframework.util.DigestUtils;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class UUIDGenerate {
-    public static void main(String[] args) throws UnsupportedEncodingException {
+    public static void main(String[] args) throws UnsupportedEncodingException, URISyntaxException {
         Emp emp = new Emp();
         emp.setPost("11");
         emp.setReady("0");
@@ -25,5 +28,14 @@ public class UUIDGenerate {
 
         String a = "0" + (8+1) + ":";
         System.out.println(a);
+
+        System.out.println("****************");
+        URI s = UUIDGenerate.class.getResource("/").toURI();
+        System.out.println(s);
+
+        URI uri = UUIDGenerate.class.getClass().getResource("/").toURI();
+        File filepath = new File(uri);
+        filepath = new File(filepath.getAbsolutePath() + "/upload");
+        System.out.println(filepath.getAbsolutePath());
     }
 }

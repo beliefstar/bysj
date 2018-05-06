@@ -2,6 +2,7 @@ package com.depth.management.service;
 
 import com.depth.management.model.Emp;
 import com.depth.management.session.LoginInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -10,6 +11,8 @@ public interface EmpService {
     Emp findById(Long id);
 
     List<Emp> findAll();
+
+    String upImg(MultipartFile file);
 
     Emp save(Emp emp, String opeUser);
 

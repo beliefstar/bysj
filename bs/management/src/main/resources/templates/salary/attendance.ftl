@@ -3,7 +3,7 @@
 
   <link rel="stylesheet" href="/plugins/ionslider/ion.rangeSlider.css">
   <!-- ion slider Nice -->
-  <link rel="stylesheet" href="/plugins/ionslider/ion.rangeSlider.skinNice.css">
+  <link rel="stylesheet" href="/plugins/ionslider/ion.rangeSlider.skinFlat.css">
 
 <link rel="stylesheet" href="/plugins/daterangepicker/daterangepicker-bs3.css">
 

@@ -163,8 +163,8 @@
                 '<div class="col-sm-3"> <label for="">处理操作：</label></div>' +
                 '<div class="col-sm-9">' +
                     '<input type="hidden" name="id" value="' + _id + '">' +
-                    '<input type="radio" name="status" value="3">通过 ' +
-                    '<input type="radio" name="status" value="4">拒绝 ' +
+                    '<input type="radio" name="status" value="3" required>通过 ' +
+                    '<input type="radio" name="status" value="4" required>拒绝 ' +
                 '</div>' +
                 '</div>' +
                 '<div class="row">' +

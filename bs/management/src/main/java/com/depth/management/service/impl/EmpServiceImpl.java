@@ -1,5 +1,6 @@
 package com.depth.management.service.impl;
 
+import com.depth.management.common.UUIDGenerate;
 import com.depth.management.common.exception.AccountException;
 import com.depth.management.common.exception.ServiceException;
 import com.depth.management.mapper.EmpMapper;
@@ -15,11 +16,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
+import org.springframework.web.multipart.MultipartFile;
 import tk.mybatis.mapper.entity.Example;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class EmpServiceImpl implements EmpService {
@@ -218,5 +226,29 @@ public class EmpServiceImpl implements EmpService {
             throw new ServiceException(e);
         }
         return list;
+    }
+
+    @Override
+    public String upImg(MultipartFile file) {
+        try {
+            URI uri = UUIDGenerate.class.getClass().getResource("/").toURI();
+            File filepath = new File(uri);
+            String rel = "/upload" + "/" + new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+            filepath = new File(filepath.getAbsolutePath() + rel);
+            filepath.mkdirs();
+            String filename = file.getOriginalFilename();
+            String[] split = filename.split("\\.");
+            filename = UUID.randomUUID().toString() + "." + split[1];
+            String rel2 =  "/" + filename;
+            filepath = new File(filepath.getAbsolutePath() + rel2);
+
+            file.transferTo(filepath);
+
+            return rel + rel2;
+
+        } catch (URISyntaxException | IOException e) {
+            e.printStackTrace();
+            throw new ServiceException(e);
+        }
     }
 }

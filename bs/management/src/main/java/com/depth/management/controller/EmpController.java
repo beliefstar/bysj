@@ -9,12 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -68,6 +65,15 @@ public class EmpController {
         Emp emp = empService.findById(id);
         modelMap.put("emp", emp);
         return view("emp_manage_edit");
+    }
+
+    @PostMapping("/upImg")
+    @ResponseBody
+    public Result upImg(@RequestParam("file") MultipartFile file) {
+        Result result = new Result();
+        String s = empService.upImg(file);
+        result.setData(s);
+        return result;
     }
 
     @PostMapping("/update")

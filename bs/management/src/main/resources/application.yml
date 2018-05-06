@@ -24,6 +24,10 @@ spring:
     max-pool-prepared-statement-per-connection-size: 20
     # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
     filters: stat
+  http:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
 #  data:
 #    elasticsearch:
 #      cluster-name: my-application
