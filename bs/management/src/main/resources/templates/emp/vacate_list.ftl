@@ -3,7 +3,18 @@
 <#--********************************************-->
 <div class="box box-success load-content">
     <div class="box-header">
-        <#if isMaster><#else ><button class="btn btn-primary" onclick="showLab('/emp/holidayNewApply')">新申请</button></#if>
+        <#if flag>
+            选择查看部门：
+        <div class="form-group" style="width: 200px">
+            <select name="departmentId" id="departmentSel" class="form-control">
+                <option value="0" >全部</option>
+                <#list departmentList as d>
+                    <option value="${d.departmentId}" <#if departmentId?? && departmentId == d.departmentId>selected</#if>>${d.name}</option>
+                </#list>
+            </select>
+        </div>
+        </#if>
+        <#if applyBtn><button class="btn btn-primary" onclick="showLab('/emp/holidayNewApply')">新申请</button></#if>
     </div>
     <!-- /.box-header -->
     <div class="box-body">
@@ -24,7 +35,7 @@
             <tr>
                 <td>${item_index}</td>
                 <td data-name="true">${item.name!}</td>
-                <td data-timestamp="true">${item.beginTime?string('yyyy-MM-dd')} - ${item.beginTime?string('yyyy-MM-dd')}</td>
+                <td data-timestamp="true">${item.beginTime?string('yyyy-MM-dd')} - ${item.endTime?string('yyyy-MM-dd')}</td>
                 <td>${item.upTime?string('yyyy-MM-dd HH:mm:ss')}</td>
                 <td>
                     <#if item.status == "0">
@@ -38,7 +49,7 @@
                 <td>
                     <div style="display: none;">${item.text!}</div>
                     <button class="btn btn-xs btn-primary" onclick="showDetail(this)"><i class="fa fa-search"></i>查看</button>
-                    <#if isMaster && item.status=="0">
+                    <#if dealBtn && item.status=="0" && item.empId != loginId>
                         <button class="btn btn-xs btn-primary" onclick="accessVacate(${item.id}, 'access')"><i class="fa fa-check-square-o"></i>通过</button>
                         <button class="btn btn-xs btn-primary" onclick="accessVacate(${item.id}, 'denied')"><i class="fa fa-ban"></i>拒绝</button>
                     </#if>
@@ -79,6 +90,11 @@
         }
     });
 </#if>
+$("#departmentSel").change(function () {
+    var id = $(this).val();
+
+    showLab('/emp/holiday?departmentId=' + id);
+});
     function showDetail(e) {
         var text = $(e).prev().html();
         var parent = $(e).parent().parent();
@@ -98,7 +114,7 @@
                 '</div>';
         showDataBox('详细信息', html);
     }
-    <#if isMaster>
+    <#if dealBtn>
         function accessVacate(_id, _type) {
             jQuery.ajax({
                 type: "POST",

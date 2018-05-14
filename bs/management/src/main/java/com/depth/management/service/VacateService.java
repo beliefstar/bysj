@@ -15,4 +15,8 @@ public interface VacateService {
     void access(Long id, Emp opa);
 
     void denied(Long id, Emp opa);
+
+    List<Vacate> findAll();
+
+    List<Vacate> findListByEmpIds(List<Long> ids);
 }

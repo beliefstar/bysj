@@ -43,10 +43,10 @@ public class AdjustmentApplyServiceImpl implements AdjustmentApplyService {
     }
 
     @Override
-    public List<AdjustmentApply> findByOrigin(Long departmentId) {
+    public List<AdjustmentApply> findOriginByDepartmentId(Long departmentId) {
         List<AdjustmentApply> applyList;
         try {
-            applyList = adjustmentApplyMapper.findByOrigin(departmentId);
+            applyList = adjustmentApplyMapper.findOriginByDepartmentId(departmentId);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ServiceException(e);
@@ -55,11 +55,11 @@ public class AdjustmentApplyServiceImpl implements AdjustmentApplyService {
     }
 
     @Override
-    public List<AdjustmentApply> findByArrive(Long departmentId) {
+    public List<AdjustmentApply> findArriveByDepartmentId(Long departmentId) {
 
         List<AdjustmentApply> applyList;
         try {
-            applyList = adjustmentApplyMapper.findByArrive(departmentId);
+            applyList = adjustmentApplyMapper.findArriveByDepartmentId(departmentId);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ServiceException(e);
@@ -84,5 +84,15 @@ public class AdjustmentApplyServiceImpl implements AdjustmentApplyService {
         } else {
             throw new ServiceException("ID为空");
         }
+    }
+
+    @Override
+    public List<AdjustmentApply> findAll() {
+        return adjustmentApplyMapper.findAll();
+    }
+
+    @Override
+    public List<AdjustmentApply> findDepartmentId(Long departmentId) {
+        return adjustmentApplyMapper.findByDepartmentId(departmentId);
     }
 }

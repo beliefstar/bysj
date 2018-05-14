@@ -8,6 +8,8 @@ public interface SalaryService {
 
     List<Salary> findListByDepartmentId(Long departmentId);
 
+    List<Salary> findAll();
+
     Salary findById(Long id);
 
     Salary findByEmpId(Long empId);

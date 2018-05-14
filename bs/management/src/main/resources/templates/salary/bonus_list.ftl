@@ -21,6 +21,17 @@
 
 <div class="box box-success load-content">
     <div class="box-header">
+        <#if flag>
+            选择查看部门：
+            <div class="form-group" style="width: 200px">
+                <select name="departmentId" id="departmentSel" class="form-control">
+                    <option value="0" >全部</option>
+                <#list departmentList as d>
+                    <option value="${d.departmentId}" <#if departmentId?? && departmentId == d.departmentId>selected</#if>>${d.name}</option>
+                </#list>
+                </select>
+            </div>
+        </#if>
     </div>
     <!-- /.box-header -->
     <div class="box-body">
@@ -61,6 +72,12 @@
 <script src="/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="/plugins/datatables/dataTables.bootstrap.min.js"></script>
 <script>
+
+    $("#departmentSel").change(function () {
+        var id = $(this).val();
+
+        showLab('/salary/bonus?departmentId=' + id);
+    });
 
     function adjustBonus(e) {
         $(e).next().show();

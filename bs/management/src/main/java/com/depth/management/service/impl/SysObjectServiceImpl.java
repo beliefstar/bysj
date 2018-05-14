@@ -48,4 +48,15 @@ public class SysObjectServiceImpl implements SysObjectService {
         }
         return rel;
     }
+
+    @Override
+    public void updateEmpRoleByEmpId(Long empId, Integer roleId) {
+        try {
+            sysObjectMapper.deleteEmpRole(empId);
+            sysObjectMapper.insertPermission(empId, roleId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException(e);
+        }
+    }
 }

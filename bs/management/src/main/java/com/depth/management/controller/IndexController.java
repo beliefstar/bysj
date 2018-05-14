@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
@@ -26,6 +25,7 @@ public class IndexController {
     public String index(ModelMap modelMap, LoginInfo loginInfo) {
         final Emp emp = loginInfo.getEmp();
 
+        modelMap.put("emp", emp);
         List<SysObjectTree> module = sysObjectService.findModule(emp.getId());
         modelMap.put("moduleList", module);
 

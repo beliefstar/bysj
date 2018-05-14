@@ -10,4 +10,6 @@ public interface VacateMapper extends Mapper<Vacate> {
     List<Vacate> getAllByDepartment(@Param("departmentId") Long departmentId);
 
     List<Vacate> getAllByEmpId(@Param("empId") Long empId);
+
+    List<Vacate> getAll();
 }

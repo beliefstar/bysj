@@ -70,6 +70,7 @@ public class AuthRealm extends AuthorizingRealm {
         String email = token.getUsername();
         Emp emp = new Emp();
         emp.setEmail(email);
+        emp.setDelFlg("0");
         emp = empMapper.selectOne(emp);
         ByteSource salt = ByteSource.Util.bytes(emp.getPhone());
         SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(email, emp.getPassword(), salt, getName());

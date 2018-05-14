@@ -91,5 +91,8 @@
         INSERT INTO holidays VALUES(null, #{weekDate}, #{comment})
     </insert>
 
+    <insert id="saveTime" parameterType="attendanceTime">
+        INSERT INTO attendance_time VALUES (null, #{startTime}, #{endTime}, #{hour}, #{departmentId})
+    </insert>
 
 </mapper>

@@ -1,6 +1,7 @@
 package com.depth.management.service.impl;
 
 import com.depth.management.common.exception.ServiceException;
+import com.depth.management.common.vo.AnaSalaryVo;
 import com.depth.management.mapper.SalaryHistoryMapper;
 import com.depth.management.model.Emp;
 import com.depth.management.model.SalaryHistory;
@@ -60,5 +61,15 @@ public class SalaryHistoryServiceImpl implements SalaryHistoryService {
             throw new ServiceException(e);
         }
         return sh;
+    }
+
+    @Override
+    public List<AnaSalaryVo> analyzeSH() {
+        return salaryHistoryMapper.analyze();
+    }
+
+    @Override
+    public List<SalaryHistory> findAll() {
+        return salaryHistoryMapper.selectAll();
     }
 }

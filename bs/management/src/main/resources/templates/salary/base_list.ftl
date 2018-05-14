@@ -3,9 +3,18 @@
 <#--********************************************-->
 <div class="box box-success load-content">
     <div class="box-header">
-        <#--<button class="btn btn-primary" onclick="showLab('/emp/adjustment?type=arrive')">转入</button>-->
-        <#--<button class="btn btn-primary" onclick="showLab('/emp/adjustment?type=origin')">转出</button>-->
-        <#--<button class="btn btn-default" onclick="showLab('/emp/newAdjustApply')">新调度</button>-->
+
+        <#if flag>
+            选择查看部门：
+            <div class="form-group" style="width: 200px">
+                <select name="departmentId" id="departmentSel" class="form-control">
+                    <option value="0" >全部</option>
+                <#list departmentList as d>
+                    <option value="${d.departmentId}" <#if departmentId?? && departmentId == d.departmentId>selected</#if>>${d.name}</option>
+                </#list>
+                </select>
+            </div>
+        </#if>
     </div>
     <!-- /.box-header -->
     <div class="box-body">
@@ -34,7 +43,9 @@
                 <td data-realIncome="true">0</td>
                 <td>
                     <button class="btn btn-xs btn-primary" onclick="showLab('/salary/view?id=' + ${item.emp.id} + '')"><i class="fa fa-search"></i>查看</button>
+                    <#if flag>
                     <button class="btn btn-xs btn-primary" onclick="adjustBase(${item.id}, ${item.emp.id}, '${item.emp.name}', '${item.emp.post}', ${item.base?c})"><i class="fa fa-edit"></i>调整基本工资</button>
+                    </#if>
                 </td>
             </tr>
             </#list>
@@ -45,6 +56,13 @@
 </div>
 <#--********************************************-->
 <script>
+
+    $("#departmentSel").change(function () {
+        var id = $(this).val();
+
+        showLab('/salary/base?departmentId=' + id);
+    });
+
     function computeIncome() {
         $("#tbody${uuid}").find("tr").each(function () {
             var realIncome = $(this).find("td[data-realIncome]");

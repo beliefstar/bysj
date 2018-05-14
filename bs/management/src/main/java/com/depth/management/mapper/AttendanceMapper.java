@@ -29,4 +29,6 @@ public interface AttendanceMapper extends Mapper<Attendance> {
     void addHoliday(Holiday holiday);
 
     List<Holiday> findHolidayAll();
+
+    void saveTime(AttendanceTime time);
 }

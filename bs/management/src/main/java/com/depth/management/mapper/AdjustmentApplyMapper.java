@@ -8,7 +8,11 @@ import java.util.List;
 
 public interface AdjustmentApplyMapper extends Mapper<AdjustmentApply> {
 
-    List<AdjustmentApply> findByOrigin(@Param("originId") Long originId);
+    List<AdjustmentApply> findOriginByDepartmentId(@Param("originId") Long originId);
 
-    List<AdjustmentApply> findByArrive(@Param("arriveId") Long arriveId);
+    List<AdjustmentApply> findArriveByDepartmentId(@Param("arriveId") Long arriveId);
+
+    List<AdjustmentApply> findAll();
+
+    List<AdjustmentApply> findByDepartmentId(@Param("departmentId") Long departmentId);
 }

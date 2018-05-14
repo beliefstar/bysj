@@ -21,4 +21,6 @@ public interface TrainService {
     void changeTrainEmp(String[] ids, Long trainId, Emp opa);
 
     List<Long> findIdsByTrainId(Long trainId);
+
+    List<Train> findAll();
 }

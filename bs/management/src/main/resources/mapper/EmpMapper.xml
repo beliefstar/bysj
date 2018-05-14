@@ -3,17 +3,20 @@
 <mapper namespace="com.depth.management.mapper.EmpMapper">
 
     <select id="checkEmail" resultType="int">
-        select COUNT(*) from WHERE email=#{email};
+        select COUNT(*) from WHERE email=#{email} AND emp.del_flg='0';
     </select>
 
     <select id="findByIds" resultType="emp">
         SELECT * FROM emp
+        <where>
         <if test="ids.size() > 0">
-            WHERE id in
+            id in
             <foreach collection="ids" separator="," open="(" close=")" item="item">
                 #{item}
             </foreach>
         </if>
+            AND emp.del_flg='0'
+        </where>
     </select>
 
 </mapper>

@@ -39,7 +39,18 @@ public class Train extends BaseEntity {
     @Transient
     private Emp publisherEmp;
 
+    @Transient
+    private String departmentName;
+
     public Train() {
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
     }
 
     public Emp getPublisherEmp() {

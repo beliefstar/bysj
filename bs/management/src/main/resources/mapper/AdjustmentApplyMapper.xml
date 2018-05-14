@@ -2,21 +2,42 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.depth.management.mapper.AdjustmentApplyMapper">
 
-    <select id="findByOrigin" resultType="adjustmentApply">
-        SELECT adjustment_apply.*, department.`name` arrive_name, emp.`name` emp_name
-        FROM adjustment_apply,department, emp
-        WHERE adjustment_apply.origin=#{originId}
-         AND adjustment_apply.arrive=department.department_id
-         AND adjustment_apply.emp_id=emp.id
+    <select id="findOriginByDepartmentId" resultType="adjustmentApply">
+        SELECT adjustment_apply.*, d1.`name` origin_name,d2.`name` arrive_name, emp.`name` emp_name
+        FROM adjustment_apply, department d1,department d2, emp
+        WHERE  adjustment_apply.origin=#{originId}
+        AND adjustment_apply.origin=d1.department_id
+        AND adjustment_apply.arrive = d2.department_id
+        AND adjustment_apply.emp_id=emp.id
         ORDER BY update_time
     </select>
 
-    <select id="findByArrive" resultType="adjustmentApply">
-        SELECT adjustment_apply.*, department.`name` origin_name, emp.`name` emp_name
-        FROM adjustment_apply,department, emp
-        WHERE adjustment_apply.arrive=#{arriveId}
-          AND adjustment_apply.origin=department.department_id
-          AND adjustment_apply.emp_id=emp.id
+    <select id="findArriveByDepartmentId" resultType="adjustmentApply">
+        SELECT adjustment_apply.*, d1.`name` origin_name,d2.`name` arrive_name, emp.`name` emp_name
+        FROM adjustment_apply, department d1,department d2, emp
+        WHERE  adjustment_apply.arrive=#{arriveId}
+        AND adjustment_apply.origin=d1.department_id
+        AND adjustment_apply.arrive = d2.department_id
+        AND adjustment_apply.emp_id=emp.id
+        ORDER BY update_time
+    </select>
+
+    <select id="findAll" resultType="adjustmentApply">
+        SELECT adjustment_apply.*, d1.`name` origin_name,d2.`name` arrive_name, emp.`name` emp_name
+        FROM adjustment_apply, department d1,department d2, emp
+        WHERE  adjustment_apply.origin=d1.department_id
+        AND adjustment_apply.arrive = d2.department_id
+        AND adjustment_apply.emp_id=emp.id
+        ORDER BY update_time
+    </select>
+
+    <select id="findByDepartmentId" resultType="adjustmentApply">
+        SELECT adjustment_apply.*, d1.`name` origin_name,d2.`name` arrive_name, emp.`name` emp_name
+        FROM adjustment_apply, department d1,department d2, emp
+        WHERE (adjustment_apply.arrive=#{departmentId} OR adjustment_apply.origin=#{departmentId})
+        AND adjustment_apply.origin=d1.department_id
+        AND adjustment_apply.arrive = d2.department_id
+        AND adjustment_apply.emp_id=emp.id
         ORDER BY update_time
     </select>
 </mapper>

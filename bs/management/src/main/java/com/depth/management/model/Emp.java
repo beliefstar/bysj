@@ -1,6 +1,9 @@
 package com.depth.management.model;
 
 import com.depth.management.common.BaseEntity;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +15,7 @@ import java.util.Date;
  * 员工表
  */
 @Table(name = "emp")
+@Document(indexName = "management", type = "emp")
 public class Emp extends BaseEntity {
     private static final long serialVersionUID = 4046419998421780519L;
     /**
@@ -43,6 +47,7 @@ public class Emp extends BaseEntity {
     /**
      * 入职时间
      */
+    @Field(type = FieldType.Date)
     private Date joinTime;
     /**
      * 民族
@@ -61,6 +66,7 @@ public class Emp extends BaseEntity {
     /**
      * 生日
      */
+    @Field(type = FieldType.Date)
     private Date birthday;
     /**
      * 电话

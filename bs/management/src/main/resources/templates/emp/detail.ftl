@@ -10,7 +10,7 @@
     <div class="box-body">
         <div class="row">
             <div class="col-sm-2 text-center">
-                <img class="img-responsive img-bordered center-block" src="${emp.img!"dist/img/user_img.jpg"}" alt="User profile picture">
+                <img class="img-responsive img-circle center-block" src="<#if emp.img?? && emp.img != "">${imgServer}${emp.img}<#else >dist/img/user_img.jpg</#if>" alt="User profile picture">
             </div>
             <div class="col-sm-5">
                 <ul>

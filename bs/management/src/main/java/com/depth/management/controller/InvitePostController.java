@@ -2,12 +2,8 @@ package com.depth.management.controller;
 
 import com.depth.management.common.exception.TurnErrorException;
 import com.depth.management.common.vo.Result;
-import com.depth.management.model.Department;
-import com.depth.management.model.Emp;
-import com.depth.management.model.InvitePost;
-import com.depth.management.service.DepartmentService;
-import com.depth.management.service.EmpService;
-import com.depth.management.service.InvitePostService;
+import com.depth.management.model.*;
+import com.depth.management.service.*;
 import com.depth.management.session.LoginInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/invitePost")
@@ -30,12 +27,16 @@ public class InvitePostController {
     private final EmpService empService;
     private final InvitePostService invitePostService;
     private final DepartmentService departmentService;
+    private final PostService postService;
+    private final SalaryService salaryService;
 
     @Autowired
-    public InvitePostController(EmpService empService, InvitePostService invitePostService, DepartmentService departmentService) {
+    public InvitePostController(EmpService empService, InvitePostService invitePostService, DepartmentService departmentService, PostService postService, SalaryService salaryService) {
         this.empService = empService;
         this.invitePostService = invitePostService;
         this.departmentService = departmentService;
+        this.postService = postService;
+        this.salaryService = salaryService;
     }
 
     @GetMapping("/newApply")
@@ -111,15 +112,24 @@ public class InvitePostController {
         Result result = new Result();
         final Emp loginEmp = loginInfo.getEmp();
 
+        boolean flag = loginEmp.getId().equals(23L);
+
         List<InvitePost> invitePostList = invitePostService.findList(invitePost);
 
-        Iterator<InvitePost> iterator = invitePostList.iterator();
-        while (iterator.hasNext()) {
-            InvitePost post = iterator.next();
-            Department department = departmentService.findById(post.getDepartmentId());
-            boolean flag = loginEmp.getId().equals(23L) || department.getMaster().equals(loginEmp.getId());
-            if (!flag) iterator.remove();
+        List<Long> ids = invitePostList.stream().map(InvitePost::getDepartmentId).collect(Collectors.toList());
+        List<Department> departmentList = departmentService.findAllByIds(ids);
+
+        if (!flag) {
+            Iterator<InvitePost> iterator = invitePostList.iterator();
+            while (iterator.hasNext()) {
+                departmentList.forEach(item -> {
+                    if (!item.getMaster().equals(loginEmp.getId())) {
+                        iterator.remove();
+                    }
+                });
+            }
         }
+
         result.setData(invitePostList);
         return result;
     }
@@ -131,6 +141,17 @@ public class InvitePostController {
         Result result = new Result();
         empService.access(empId, loginEmp.getName());
         invitePostService.access(empId, loginEmp);
+
+        Emp emp = empService.findById(empId);
+        Post post = postService.findByName(emp.getPost());
+        Salary salary = new Salary();
+        salary.setBase(post.getSalary());
+        salary.setEmpId(emp.getId());
+        salary.setBonus(0);
+        salary.setSubsidy(0);
+        salary.setComment("初始工资");
+        //设置工资
+        salaryService.save(salary, loginEmp.getName());
         return result;
     }
 

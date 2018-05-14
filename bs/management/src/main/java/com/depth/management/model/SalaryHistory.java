@@ -1,6 +1,7 @@
 package com.depth.management.model;
 
 import com.depth.management.common.BaseEntity;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
 
@@ -8,6 +9,7 @@ import javax.persistence.*;
  * 历史薪资表
  */
 @Table(name = "salary_history")
+@Document(indexName = "management", type = "sh")
 public class SalaryHistory extends BaseEntity {
     private static final long serialVersionUID = -1538135001203921557L;
 

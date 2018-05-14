@@ -11,19 +11,20 @@
         <div class="box-body">
 
             <div class="form-group">
-                <label>员工姓名：</label>
-                <select name="empId" class="form-control select2" style="width: 100%;" title="员工" required>
+                <label>选择部门：</label>
+                <select name="origin" class="form-control select2" id="originDepartment" style="width: 100%;" required>
                     <option selected>-- 请选择 --</option>
-                    <#list empList as emp>
-                        <option value="${emp.id}">${emp.name!}</option>
+                    <#list departmentList as department>
+                        <option value="${department.departmentId}">${department.name!}</option>
                     </#list>
                 </select>
             </div>
 
             <div class="form-group">
-                <label>当前部门：</label>
-                <input type="hidden" name="origin" class="form-control" value="${currentDepartment.departmentId}">
-                <input type="text" class="form-control" readonly value="${currentDepartment.name}">
+                <label>员工姓名：</label>
+                <select name="empId" class="form-control select2" id="empList" style="width: 100%;" title="员工" required>
+                    <option selected>-- 请选择 --</option>
+                </select>
             </div>
 
             <div class="form-group">
@@ -32,6 +33,15 @@
                     <option selected>-- 请选择 --</option>
                     <#list departmentList as department>
                         <option value="${department.departmentId}">${department.name!}</option>
+                    </#list>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>职位：</label>
+                <select name="post" class="form-control" style="width: 100%;" required>
+                    <#list postList as item>
+                        <option>${item.post}</option>
                     </#list>
                 </select>
             </div>
@@ -60,6 +70,26 @@
 <script src="/plugins/select2/select2.full.min.js"></script>
 <script>
     $(".select2").select2();
+
+    $("#originDepartment").change(function () {
+        var id = $(this).val();
+        if (id.trim() === "") return;
+        jQuery.ajax({
+            url: "/emp/findListByDepartment",
+            type: "POST",
+            data: {
+                departmentId: id
+            }
+        }).done(function (result) {
+            if (result.status === 200) {
+                var html = "<option selected>-- 请选择 --</option>";
+                $.each(result.data, function (k, v) {
+                    html += "<option value='" + v.id + "'>" + v.name + "</option>";
+                });
+                $("#empList").html(html);
+            }
+        })
+    });
 
     $("#form${uuid}").submit(function () {
 

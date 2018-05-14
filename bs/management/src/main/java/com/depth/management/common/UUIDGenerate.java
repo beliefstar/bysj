@@ -1,7 +1,6 @@
 package com.depth.management.common;
 
 import com.depth.management.model.Emp;
-import org.springframework.util.DigestUtils;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -18,10 +17,12 @@ public class UUIDGenerate {
 //        EmpExample empExample = (EmpExample) emp;//no
 //        System.out.println(empExample);
 
-        String str = "123456";
-        str = DigestUtils.md5DigestAsHex(str.getBytes("UTF-8"));
-        System.out.println(str);
-
+        String str = "13312111212123456";
+        //str = DigestUtils.md5DigestAsHex(str.getBytes("UTF-8"));
+        //System.out.println(str);
+        //File file = new File("src/main/java/resources/static");
+        //System.out.println(file.getAbsolutePath());
+/*
         String str2 = "2018/04/01";
         str2 = DigestUtils.md5DigestAsHex(str2.getBytes("UTF-8"));
         System.out.println(str2);
@@ -32,10 +33,11 @@ public class UUIDGenerate {
         System.out.println("****************");
         URI s = UUIDGenerate.class.getResource("/").toURI();
         System.out.println(s);
-
-        URI uri = UUIDGenerate.class.getClass().getResource("/").toURI();
+*/
+        URI uri = UUIDGenerate.class.getClass().getResource("/upload").toURI();
         File filepath = new File(uri);
-        filepath = new File(filepath.getAbsolutePath() + "/upload");
+        //filepath = new File(filepath.getAbsolutePath() + "/upload");
         System.out.println(filepath.getAbsolutePath());
+
     }
 }

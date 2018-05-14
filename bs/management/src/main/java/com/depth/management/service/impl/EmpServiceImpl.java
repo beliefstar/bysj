@@ -1,12 +1,15 @@
 package com.depth.management.service.impl;
 
-import com.depth.management.common.UUIDGenerate;
 import com.depth.management.common.exception.AccountException;
 import com.depth.management.common.exception.ServiceException;
 import com.depth.management.mapper.EmpMapper;
 import com.depth.management.mapper.SysObjectMapper;
 import com.depth.management.model.Emp;
+import com.depth.management.model.Post;
+import com.depth.management.model.Salary;
 import com.depth.management.service.EmpService;
+import com.depth.management.service.PostService;
+import com.depth.management.service.SalaryService;
 import com.depth.management.session.LoginInfo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -16,24 +19,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.multipart.MultipartFile;
 import tk.mybatis.mapper.entity.Example;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class EmpServiceImpl implements EmpService {
 
     private final EmpMapper empMapper;
     private final SysObjectMapper sysObjectMapper;
+
 
     @Autowired
     public EmpServiceImpl(EmpMapper empMapper, SysObjectMapper sysObjectMapper) {
@@ -193,6 +190,7 @@ public class EmpServiceImpl implements EmpService {
             empMapper.updateByPrimaryKeySelective(emp);
             //设置权限
             sysObjectMapper.insertPermission(id, 2);
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new ServiceException(e);
@@ -229,26 +227,22 @@ public class EmpServiceImpl implements EmpService {
     }
 
     @Override
-    public String upImg(MultipartFile file) {
+    public void signDelete(Long id) {
+        Emp emp = new Emp();
+        emp.setDelFlg("1");
+        emp.setId(id);
+        Date date = new Date();
+        emp.setUpdateTime(date);
         try {
-            URI uri = UUIDGenerate.class.getClass().getResource("/").toURI();
-            File filepath = new File(uri);
-            String rel = "/upload" + "/" + new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-            filepath = new File(filepath.getAbsolutePath() + rel);
-            filepath.mkdirs();
-            String filename = file.getOriginalFilename();
-            String[] split = filename.split("\\.");
-            filename = UUID.randomUUID().toString() + "." + split[1];
-            String rel2 =  "/" + filename;
-            filepath = new File(filepath.getAbsolutePath() + rel2);
-
-            file.transferTo(filepath);
-
-            return rel + rel2;
-
-        } catch (URISyntaxException | IOException e) {
+            empMapper.updateByPrimaryKeySelective(emp);
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ServiceException(e);
         }
+    }
+
+    @Override
+    public List<Emp> findTrueAll() {
+        return empMapper.selectAll();
     }
 }

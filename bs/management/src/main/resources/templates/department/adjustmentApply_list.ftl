@@ -3,9 +3,23 @@
 <#--********************************************-->
 <div class="box box-success load-content">
     <div class="box-header">
+        <#if flag>
+            选择查看部门：
+        <div class="form-group" style="width: 200px">
+            <select name="departmentId" id="departmentSel" class="form-control">
+                <option value="0" >全部</option>
+                <#list departmentList as d>
+                    <option value="${d.departmentId}" <#if departmentId?? && departmentId == d.departmentId>selected</#if>>${d.name}</option>
+                </#list>
+            </select>
+        </div>
+        <#else >
         <button class="btn btn-primary" onclick="showLab('/emp/adjustment?type=arrive')">转入</button>
         <button class="btn btn-primary" onclick="showLab('/emp/adjustment?type=origin')">转出</button>
-        <button class="btn btn-default" onclick="showLab('/emp/newAdjustApply')">新调度</button>
+        </#if>
+        <#if flag>
+            <button class="btn btn-default" onclick="showLab('/emp/newAdjustApply')">新调度</button>
+        </#if>
     </div>
     <!-- /.box-header -->
     <div class="box-body">
@@ -17,6 +31,7 @@
                 <th>申请时间</th>
                 <th>原部门</th>
                 <th>转到部门</th>
+                <th>职位</th>
                 <th>状态</th>
                 <th>操作</th>
             </tr>
@@ -33,17 +48,14 @@
                 </td>
                 <td data-originName="true">${item.originName!}</td>
                 <td data-arriveName="true">${item.arriveName!}</td>
+                <td data-post="true">${item.post!}</td>
                 <td data-status="${item.status}">
                     <#if item.status == "0">
                         <span class="label label-info">新申请</span>
-                    <#elseif item.status == "1">
-                        <span class="label label-warning">原部门主管同意</span>
-                    <#elseif item.status == "2">
-                        <span class="label label-danger">原部门拒绝</span>
                     <#elseif item.status == "3">
-                        <span class="label label-success">到达部门同意</span>
+                        <span class="label label-success">已同意</span>
                     <#elseif item.status == "4">
-                        <span class="label label-danger">到达部门拒绝</span>
+                        <span class="label label-danger">已拒绝</span>
                     </#if>
                 </td>
                 <td>
@@ -61,7 +73,7 @@
                         </#if>
                     </div>
                     <button class="btn btn-xs btn-primary" onclick="showDetail(this)"><i class="fa fa-search"></i>查看</button>
-                    <#if type=="arrive" && item.status != "3" && item.status != "4">
+                    <#if admin && item.status != "3" && item.status != "4">
                         <button class="btn btn-xs btn-primary" onclick="deal('${item.id}', ${item.empId}, ${item.arrive}, this)"><i class="fa fa-edit"></i>处理</button>
                     </#if>
                 </td>
@@ -77,7 +89,11 @@
 <script src="/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="/plugins/datatables/dataTables.bootstrap.min.js"></script>
 <script>
+    $("#departmentSel").change(function () {
+        var id = $(this).val();
 
+        showLab('/emp/adjustment?departmentId=' + id);
+    });
     $("#table${uuid}").DataTable({
         "language": {
             "info": "当前第 _PAGE_ 页 ，共 _PAGES_ 页",
@@ -101,11 +117,11 @@
         var applyTime = tr.find('td[data-applyTime]').html();
         var originName = tr.find('td[data-originName]').html();
         var arriveName = tr.find('td[data-arriveName]').html();
+        var post = tr.find('td[data-post]').html();
         var status = tr.find('td[data-status]').html();
         var text = tr.find('div[data-text]').html();
         var originComment = tr.find('div[data-originComment]').html();
         var arriveComment = tr.find('div[data-arriveComment]').html();
-        var originDealTime = tr.find('div[data-originDealTime]').html();
         var arriveDealTime = tr.find('div[data-arriveDealTime]').html();
         var html = '<div class="row">' +
                 '<div class="col-sm-3"> <label for="">申请人：</label></div>' +
@@ -120,6 +136,10 @@
                 '<div class="col-sm-9">' + text + '</div>' +
                 '</div>'+
                 '<div class="row">' +
+                '<div class="col-sm-3"> <label for="">职位：</label></div>' +
+                '<div class="col-sm-9">' + post + '</div>' +
+                '</div>'+
+                '<div class="row">' +
                 '<div class="col-sm-3"> <label for="">状态：</label></div>' +
                 '<div class="col-sm-9">' + status + '</div>' +
                 '</div>'+
@@ -128,11 +148,7 @@
                 '<div class="col-sm-9">' + originName + '</div>' +
                 '</div>'+
                 '<div class="row">' +
-                '<div class="col-sm-3"> <label for="">原部门处理时间：</label></div>' +
-                '<div class="col-sm-9">' + originDealTime + '</div>' +
-                '</div>'+
-                '<div class="row">' +
-                '<div class="col-sm-3"> <label for="">原部门处理意见：</label></div>' +
+                '<div class="col-sm-3"> <label for="">备注：</label></div>' +
                 '<div class="col-sm-9">' + originComment + '</div>' +
                 '</div>'+
                 '<div class="row">' +
@@ -140,11 +156,11 @@
                 '<div class="col-sm-9">' + arriveName + '</div>' +
                 '</div>'+
                 '<div class="row">' +
-                '<div class="col-sm-3"> <label for="">转到部门处理意见：</label></div>' +
+                '<div class="col-sm-3"> <label for="">处理意见：</label></div>' +
                 '<div class="col-sm-9">' + arriveDealTime + '</div>' +
                 '</div>'+
                 '<div class="row">' +
-                '<div class="col-sm-3"> <label for="">转到部门处理时间：</label></div>' +
+                '<div class="col-sm-3"> <label for="">处理时间：</label></div>' +
                 '<div class="col-sm-9">' + arriveComment + '</div>' +
                 '</div>';
         showDataBox('详细信息', html);
@@ -155,10 +171,10 @@
         var applyTime = tr.find('td[data-applyTime]').html();
         var originName = tr.find('td[data-originName]').html();
         var arriveName = tr.find('td[data-arriveName]').html();
+        var post = tr.find('td[data-post]').html();
         var status = tr.find('td[data-status]').html();
         var text = tr.find('div[data-text]').html();
         var originComment = tr.find('div[data-originComment]').html();
-        var originDealTime = tr.find('div[data-originDealTime]').html();
         var html = '<div class="row">' +
                 '<div class="col-sm-3"> <label for="">处理操作：</label></div>' +
                 '<div class="col-sm-9">' +
@@ -189,11 +205,7 @@
                 '<div class="col-sm-9">' + originName + '</div>' +
                 '</div>'+
                 '<div class="row">' +
-                '<div class="col-sm-3"> <label for="">原部门处理时间：</label></div>' +
-                '<div class="col-sm-9">' + originDealTime + '</div>' +
-                '</div>'+
-                '<div class="row">' +
-                '<div class="col-sm-3"> <label for="">原部门处理意见：</label></div>' +
+                '<div class="col-sm-3"> <label for="">备注：</label></div>' +
                 '<div class="col-sm-9">' + originComment + '</div>' +
                 '</div>'+
                 '<div class="row">' +
@@ -201,7 +213,11 @@
                 '<div class="col-sm-9"><input type="hidden" name="arrive" value="' + arrive + '">' + arriveName + '</div>' +
                 '</div>'+
                 '<div class="row">' +
-                '<div class="col-sm-3"> <label for="">转到部门处理意见：</label></div>' +
+                '<div class="col-sm-3"> <label for="">职位：</label></div>' +
+                '<div class="col-sm-9"><input type="hidden" name="post" value="' + post + '">' + post + '</div>' +
+                '</div>'+
+                '<div class="row">' +
+                '<div class="col-sm-3"> <label for="">处理意见：</label></div>' +
                 '<div class="col-sm-9"><textarea class="form-control" name="arriveComment" required></textarea></div>' +
                 '</div>';
         formBox('处理信息', html, {

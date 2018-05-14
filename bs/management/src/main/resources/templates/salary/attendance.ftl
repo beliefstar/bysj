@@ -34,6 +34,26 @@
     }
 </style>
 <div class="row">
+    <#if flag>
+    <div class="col-md-12">
+        <div class="box box-primary load-content">
+            <div class="box-header with-border">
+                <input type="hidden" id="departmentIdVal" value="<#if departmentId??>${departmentId}</#if>">
+            </div>
+            <div class="box-body">
+                    选择查看部门：
+                    <div class="form-group" style="width: 200px">
+                        <select name="departmentId" id="departmentSel" class="form-control">
+                            <option value="0" >全部</option>
+                                <#list departmentList as d>
+                                    <option value="${d.departmentId}" <#if departmentId?? && departmentId == d.departmentId>selected</#if>>${d.name}</option>
+                                </#list>
+                        </select>
+                    </div>
+            </div>
+        </div>
+    </div>
+    </#if>
     <div class="col-md-12">
         <div class="box box-primary load-content">
             <div class="box-header with-border">
@@ -225,6 +245,13 @@
 <script src="/plugins/datepicker/bootstrap-datepicker.js"></script>
 <script src="/plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js"></script>
 <script>
+
+    $("#departmentSel").change(function () {
+        var id = $(this).val();
+
+        showLab('/salary/attendance?departmentId=' + id);
+    });
+
     function refreshData() {
         var timeRange = $("#reservation").val();
         if (timeRange.trim() === "") {
@@ -252,7 +279,8 @@
         var arr = str.split("-");
         var data = {
             startTime: arr[0].trim() + ":00",
-            endTime: arr[1].trim() + ":00"
+            endTime: arr[1].trim() + ":00",
+            departmentId: $("#departmentIdVal").val()
         };
         jQuery.ajax({
             url: "/salary/updateAttendanceTime",

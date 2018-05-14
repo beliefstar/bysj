@@ -4,7 +4,9 @@ import com.depth.management.common.exception.ServiceException;
 import com.depth.management.mapper.SalaryMapper;
 import com.depth.management.model.Emp;
 import com.depth.management.model.Salary;
+import com.depth.management.model.SalaryHistory;
 import com.depth.management.service.EmpService;
+import com.depth.management.service.SalaryHistoryService;
 import com.depth.management.service.SalaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,9 @@ public class SalaryServiceImpl implements SalaryService {
 
     @Autowired
     private EmpService empService;
+
+    @Autowired
+    private SalaryHistoryService salaryHistoryService;
 
     @Override
     public List<Salary> findListByDepartmentId(Long departmentId) {
@@ -46,6 +51,21 @@ public class SalaryServiceImpl implements SalaryService {
     }
 
     @Override
+    public List<Salary> findAll() {
+        List<Salary> salaries = salaryMapper.selectAll();
+        List<Emp> emps = empService.findAll();
+        for (Salary salary : salaries) {
+            for (Emp emp : emps) {
+                if (emp.getId().equals(salary.getEmpId())) {
+                    salary.setEmp(emp);
+                }
+            }
+        }
+        salaries.removeIf(item -> item.getEmp() == null);
+        return salaries;
+    }
+
+    @Override
     public Salary findById(Long id) {
         Salary salary = new Salary();
         salary.setId(id);
@@ -65,17 +85,16 @@ public class SalaryServiceImpl implements SalaryService {
     public Salary findByEmpId(Long empId) {
         Salary salary = new Salary();
         salary.setEmpId(empId);
-        Salary one = null;
-        Emp emp = null;
+        Emp emp;
         try {
-            one = salaryMapper.selectOne(salary);
+            salary = salaryMapper.selectOne(salary);
             emp = empService.findById(empId);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ServiceException(e);
         }
-        one.setEmp(emp);
-        return one;
+        salary.setEmp(emp);
+        return salary;
     }
 
     @Override
@@ -103,6 +122,13 @@ public class SalaryServiceImpl implements SalaryService {
 
         if (salary.getId() != null) {
             try {
+                Salary key = salaryMapper.selectByPrimaryKey(salary.getId());
+                SalaryHistory sh = new SalaryHistory();
+                sh.setEmpId(salary.getEmpId());
+                sh.setSalary(key.getBase());
+                sh.setComment(salary.getComment());
+                salaryHistoryService.save(sh, opa);
+
                 salaryMapper.updateByPrimaryKeySelective(salary);
             } catch (Exception e) {
                 e.printStackTrace();

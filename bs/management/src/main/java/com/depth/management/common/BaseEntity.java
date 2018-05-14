@@ -1,5 +1,8 @@
 package com.depth.management.common;
 
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -7,6 +10,7 @@ public abstract class BaseEntity implements Serializable{
     /**
      * 创建时间
      */
+    @Field(type = FieldType.Date)
     private Date createTime;
     /**
      * 创建者
@@ -15,6 +19,7 @@ public abstract class BaseEntity implements Serializable{
     /**
      * 修改时间
      */
+    @Field(type = FieldType.Date)
     private Date updateTime;
     /**
      * 修改者

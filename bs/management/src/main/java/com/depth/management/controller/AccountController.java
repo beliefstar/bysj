@@ -7,12 +7,11 @@ import com.depth.management.session.LoginInfo;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/account")
@@ -48,15 +47,13 @@ public class AccountController {
     @ResponseBody
     public Result register(Emp emp, LoginInfo loginInfo) {
         Result result = new Result();
-        System.out.println("come in");
-        System.out.println(emp);
         empService.register(emp, loginInfo);
         return result;
     }
 
     @PostMapping("/modifyPwd")
     @ResponseBody
-    public Result modifyPwd(String oldPwd, String newPwd, LoginInfo loginInfo, HttpSession session) {
+    public Result modifyPwd(String oldPwd, String newPwd, LoginInfo loginInfo) {
         Result result = new Result();
         empService.modifyPwd(oldPwd, newPwd, loginInfo);
         SecurityUtils.getSubject().logout();
@@ -74,5 +71,13 @@ public class AccountController {
     @GetMapping("/profile")
     public String profile(LoginInfo loginInfo) {
         return tpl + "profile";
+    }
+
+    @GetMapping("/lockscreen")
+    public String lockscreen(LoginInfo loginInfo, ModelMap modelMap) {
+        final Emp loginEmp = loginInfo.getEmp();
+        modelMap.put("emp", loginEmp);
+        SecurityUtils.getSubject().logout();
+        return "lockscreen";
     }
 }

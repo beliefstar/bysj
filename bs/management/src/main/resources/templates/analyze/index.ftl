@@ -1,7 +1,7 @@
 
 
 
-
+<link rel="stylesheet" href="/plugins/daterangepicker/daterangepicker-bs3.css">
 <style>
     #pieChartLegend, #areaChartLegend {
         position: absolute;
@@ -28,7 +28,7 @@
 </style>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-12">
         <!-- AREA CHART -->
         <div class="box box-primary">
             <div class="box-header with-border">
@@ -38,6 +38,19 @@
                     <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                     </button>
                     <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                </div>
+                <br>
+                <div class="form-group margin">
+                    <label class="col-sm-2 control-label" for="reservation">选择时间:</label>
+                    <div class="col-sm-10">
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                            <input type="text" name="timeRange" class="form-control pull-right" id="reservation" value="${timeRange}">
+                        </div>
+                    </div>
+                    <!-- /.input group -->
                 </div>
             </div>
             <div class="box-body">
@@ -50,32 +63,12 @@
         </div>
         <!-- /.box -->
 
-        <!-- DONUT CHART -->
-        <div class="box box-danger">
-            <div class="box-header with-border">
-                <h3 class="box-title">考勤数据分析</h3>
-
-                <div class="box-tools pull-right">
-                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                </div>
-            </div>
-            <div class="box-body">
-                <canvas id="pieChart" style="height:250px"></canvas>
-                <ul id="pieChartLegend"></ul>
-            </div>
-            <!-- /.box-body -->
-        </div>
-        <!-- /.box -->
-
     </div>
-    <!-- /.col (LEFT) -->
     <div class="col-md-6">
-        <!-- LINE CHART -->
-        <div class="box box-info">
+        <!-- AREA CHART -->
+        <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title">薪资数据</h3>
+                <h3 class="box-title">入职数据</h3>
 
                 <div class="box-tools pull-right">
                     <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -84,22 +77,80 @@
                 </div>
             </div>
             <div class="box-body">
-                <div class="chart">
-                    <canvas id="lineChart" style="height:250px"></canvas>
-                </div>
+                <table class="table table-hover">
+                    <tr>
+                        <th>编号</th>
+                        <th>时间</th>
+                        <th>入职人数</th>
+                    </tr>
+                    <tbody>
+                        <#list inLevel as item>
+                            <tr>
+                                <td>${item_index + 1}</td>
+                                <td>${itemLabel[item_index]}</td>
+                                <td>${item.docCount}</td>
+                            </tr>
+                        </#list>
+                    </tbody>
+                </table>
             </div>
             <!-- /.box-body -->
         </div>
         <!-- /.box -->
 
     </div>
-    <!-- /.col (RIGHT) -->
-</div>
+    <div class="col-md-6">
+        <!-- AREA CHART -->
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">离职数据</h3>
 
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                <table class="table table-hover">
+                    <tr>
+                        <th>编号</th>
+                        <th>时间</th>
+                        <th>入职人数</th>
+                    </tr>
+                    <tbody>
+                        <#list outLevel as item>
+                        <tr>
+                            <td>${item_index + 1}</td>
+                            <td>${itemLabel[item_index]}</td>
+                            <td>${item.docCount}</td>
+                        </tr>
+                        </#list>
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+
+    </div>
+</div>
+<script src="/plugins/daterangepicker/moment.min.js"></script>
+<script src="/plugins/daterangepicker/daterangepicker.js"></script>
 <script src="/plugins/chartjs/Chart.min.js"></script>
 
 <script>
+
+    $('#reservation').daterangepicker();
+
     $(function () {
+
+        $('#reservation').change(function () {
+            var range = $(this).val();
+
+            showLab('/analyze/probability?timeRange=' + range);
+        });
+
         /* ChartJS
          * -------
          * Here we will create a few charts using ChartJS
@@ -109,27 +160,49 @@
         var areaChart = new Chart(areaChartCanvas);
 
         var areaChartData = {
-            labels: ["1月", "2月", "3月", "4月", "5月"],
+            labels: [
+                <#list itemLabel as item>
+                    "${item}"
+                    <#if item_has_next>
+                            ,
+                    </#if>
+                </#list>
+            ],
             datasets: [
                 {
                     label: "入职率",
-                    fillColor: "rgba(60,141,188,0.9)",
+                    fillColor: "rgba(60,141,188,0.1)",
                     strokeColor: "rgba(60,141,188,0.8)",
                     pointColor: "#3b8bba",
                     pointStrokeColor: "rgba(60,141,188,1)",
                     pointHighlightFill: "#fff",
                     pointHighlightStroke: "rgba(60,141,188,1)",
-                    data: [10, 12, 8, 9, 7]
+                    data:
+                    [
+                        <#list inLevel as item>
+                            ${item.docCount}
+                            <#if item_has_next>
+                                ,
+                            </#if>
+                        </#list>
+                    ]
                 },
                 {
                     label: "离职率",
-                    fillColor: "rgba(210, 214, 222, 1)",
+                    fillColor: "rgba(210, 214, 222, 0.1)",
                     strokeColor: "rgba(210, 214, 222, 1)",
                     pointColor: "rgba(210, 214, 222, 1)",
                     pointStrokeColor: "#c1c7d1",
                     pointHighlightFill: "#fff",
                     pointHighlightStroke: "rgba(220,220,220,1)",
-                    data: [6, 8, 8, 6, 8]
+                    data: [
+                        <#list outLevel as item>
+                            ${item.docCount}
+                            <#if item_has_next>
+                                ,
+                            </#if>
+                        </#list>
+                    ]
                 }
             ]
         };
@@ -173,102 +246,11 @@
             responsive: true
         };
 
-        //Create the line chart
         areaChart.Line(areaChartData, areaChartOptions);
 
         $.each(areaChartData.datasets, function (k, v) {
-            var pieHtml = "<li style=\"background-color: " + v.fillColor + "\">" + v.label +  "</li>";
+            var pieHtml = "<li style=\"background-color: " + v.pointColor + "\">" + v.label +  "</li>";
             $("#areaChartLegend").append(pieHtml);
         })
-
-        //-------------
-        //- LINE CHART -
-        //--------------
-        var lineChartData = {
-            labels: ["1月", "2月", "3月", "4月", "5月"],
-            datasets: [
-                {
-                    label: "in",
-                    fillColor: "rgba(60,141,188,0.9)",
-                    strokeColor: "rgba(60,141,188,0.8)",
-                    pointColor: "#3b8bba",
-                    pointStrokeColor: "rgba(60,141,188,1)",
-                    pointHighlightFill: "#fff",
-                    pointHighlightStroke: "rgba(60,141,188,1)",
-                    data: [5020, 5050, 5080, 5070, 5070]
-                }
-            ]
-        };
-        var lineChartCanvas = $("#lineChart").get(0).getContext("2d");
-        var lineChart = new Chart(lineChartCanvas);
-        var lineChartOptions = areaChartOptions;
-        lineChartOptions.datasetFill = false;
-
-        lineChart.Line(lineChartData, lineChartOptions);
-
-        //-------------
-        //- PIE CHART -
-        //-------------
-        // Get context with jQuery - using jQuery's .get() method.
-        var pieChartCanvas = $("#pieChart").get(0).getContext("2d");
-        var pieChart = new Chart(pieChartCanvas);
-        var PieData = [
-            {
-                value: 15,
-                color: "#00c0ef",
-                highlight: "#00acd6",
-                label: "迟到"
-            },
-            {
-                value: 10,
-                color: "#f39c12",
-                highlight: "#e08e0b",
-                label: "早退"
-            },
-            {
-                value: 5,
-                color: "#dd4b39",
-                highlight: "#d73925",
-                label: "旷工"
-            },
-            {
-                value: 70,
-                color: "#00a65a",
-                highlight: "#008d4c",
-                label: "正常"
-            }
-        ];
-        var pieOptions = {
-            //Boolean - Whether we should show a stroke on each segment
-            segmentShowStroke: true,
-            //String - The colour of each segment stroke
-            segmentStrokeColor: "#fff",
-            //Number - The width of each segment stroke
-            segmentStrokeWidth: 2,
-            //Number - The percentage of the chart that we cut out of the middle
-            percentageInnerCutout: 50, // This is 0 for Pie charts
-            //Number - Amount of animation steps
-            animationSteps: 100,
-            //String - Animation easing effect
-            animationEasing: "easeOutBounce",
-            //Boolean - Whether we animate the rotation of the Doughnut
-            animateRotate: true,
-            //Boolean - Whether we animate scaling the Doughnut from the centre
-            animateScale: false,
-            //Boolean - whether to make the chart responsive to window resizing
-            responsive: true,
-            // Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
-            maintainAspectRatio: true,
-            //String - A legend template
-            legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
-        };
-        //Create pie or douhnut chart
-        // You can switch between pie and douhnut using the method below.
-        pieChart.Doughnut(PieData, pieOptions);
-        $.each(PieData, function (k, v) {
-            var pieHtml = "<li style=\"background-color: " + v.color + "\">" + v.label +  "</li>";
-            $("#pieChartLegend").append(pieHtml);
-        });
-
     });
 </script>

@@ -3,6 +3,17 @@
 <#--********************************************-->
 <div class="box box-success load-content">
     <div class="box-header">
+        <#if flag>
+            选择查看部门：
+        <div class="form-group" style="width: 200px">
+            <select name="departmentId" id="departmentSel" class="form-control">
+                <option value="0" >全部</option>
+                <#list departmentList as d>
+                    <option value="${d.departmentId}" <#if departmentId?? && departmentId == d.departmentId>selected</#if>>${d.name}</option>
+                </#list>
+            </select>
+        </div>
+        </#if>
         <button class="btn btn-primary" onclick="showLab('/emp/newTrainUI')">新培训</button>
     </div>
     <!-- /.box-header -->
@@ -12,6 +23,7 @@
             <tr>
                 <th>编号</th>
                 <th>标题</th>
+                <th>部门</th>
                 <th>开始时间</th>
                 <th>结束时间</th>
                 <th>发布者</th>
@@ -24,6 +36,7 @@
             <tr>
                 <td>${item_index}</td>
                 <td data-title="true">${item.title!}</td>
+                <td>${item.departmentName}</td>
                 <td>${item.startTime?string('yyyy-MM-dd HH:mm:ss')}</td>
                 <td>${item.endTime?string('yyyy-MM-dd HH:mm:ss')}</td>
                 <td>${item.publisherEmp.name!}</td>
@@ -32,17 +45,12 @@
                 </td>
             </tr>
             </#list>
-            <#else >
-            <tr>
-                <td colspan="6" style="text-align: center"> --- 无相关数据 --- </td>
-            </tr>
             </#if>
             </tbody>
         </table>
     </div>
     <!-- /.box-body -->
 </div>
-<#--********************************************-->
 
 <script src="/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="/plugins/datatables/dataTables.bootstrap.min.js"></script>
@@ -66,5 +74,9 @@
         }
     });
 
+    $("#departmentSel").change(function () {
+        var id = $(this).val();
 
+        showLab('/emp/train?departmentId=' + id);
+    });
 </script>

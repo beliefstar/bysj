@@ -24,6 +24,8 @@ public class AdjustmentApply extends BaseEntity {
      */
     @Transient
     private String empName;
+
+    private String post;
     /**
      * 申请时间
      */
@@ -78,6 +80,14 @@ public class AdjustmentApply extends BaseEntity {
     private String arriveComment;
 
     public AdjustmentApply() {
+    }
+
+    public String getPost() {
+        return post;
+    }
+
+    public void setPost(String post) {
+        this.post = post;
     }
 
     public String getEmpName() {

@@ -9,10 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/emp")
@@ -24,14 +27,29 @@ public class EmpController {
     private final VacateService vacateService;
     private final AdjustmentApplyService adjustmentApplyService;
     private final TrainService trainService;
+    private final PostService postService;
+    private final SalaryService salaryService;
+    private final SysObjectService sysObjectService;
 
     @Autowired
-    public EmpController(EmpService empService, DepartmentService departmentService, VacateService vacateService, AdjustmentApplyService adjustmentApplyService, TrainService trainService) {
+    public EmpController(EmpService empService, DepartmentService departmentService, VacateService vacateService, AdjustmentApplyService adjustmentApplyService, TrainService trainService, PostService postService, SalaryService salaryService, SysObjectService sysObjectService) {
         this.empService = empService;
         this.departmentService = departmentService;
         this.vacateService = vacateService;
         this.adjustmentApplyService = adjustmentApplyService;
         this.trainService = trainService;
+        this.postService = postService;
+        this.salaryService = salaryService;
+        this.sysObjectService = sysObjectService;
+    }
+
+    @PostMapping("/findListByDepartment")
+    @ResponseBody
+    public Result getListByDepartment(Long departmentId) {
+        Result result = new Result();
+        List<Emp> list = empService.findByDepartmentId(departmentId);
+        result.setData(list);
+        return result;
     }
 
     @GetMapping("/view")
@@ -53,10 +71,29 @@ public class EmpController {
     }
 
     @GetMapping("/detail")
-    public String showDetail(ModelMap modelMap, LoginInfo loginInfo) {
+    public String showDetail(Long departmentId, ModelMap modelMap, LoginInfo loginInfo) {
         final Emp loginInfoEmp = loginInfo.getEmp();
-        List<Emp> all = empService.findByDepartmentId(loginInfoEmp.getDepartmentId());
+
+        boolean flag = loginInfoEmp.getId().equals(23L);
+
+        List<Emp> all;
+        if (flag) {
+            if (departmentId == null || departmentId.equals(0L)) {
+                all = empService.findAll();
+                modelMap.put("departmentId", 0);
+            } else {
+                all = empService.findByDepartmentId(departmentId);
+                modelMap.put("departmentId", departmentId);
+            }
+        } else {
+            all = empService.findByDepartmentId(loginInfoEmp.getDepartmentId());
+        }
         modelMap.put("empList", all);
+
+        List<Department> departments = departmentService.findAll();
+        modelMap.put("departmentList", departments);
+
+        modelMap.put("isMaster", flag);
         return view("emp_list");
     }
 
@@ -67,20 +104,16 @@ public class EmpController {
         return view("emp_manage_edit");
     }
 
-    @PostMapping("/upImg")
-    @ResponseBody
-    public Result upImg(@RequestParam("file") MultipartFile file) {
-        Result result = new Result();
-        String s = empService.upImg(file);
-        result.setData(s);
-        return result;
-    }
-
     @PostMapping("/update")
     @ResponseBody
     public Result save(Emp emp, LoginInfo loginInfo) {
         final Emp loginEmp = loginInfo.getEmp();
         Result result = new Result();
+        if (emp.getId().equals(loginEmp.getId())) {
+            if (!StringUtils.isEmpty(emp.getImg())) {
+                loginEmp.setImg(emp.getImg());
+            }
+        }
         empService.update(emp, loginEmp.getName());
         return result;
     }
@@ -90,12 +123,34 @@ public class EmpController {
     }
 
     @GetMapping("/holiday")
-    public String getList(LoginInfo loginInfo, ModelMap modelMap) {
+    public String getList(Long departmentId, LoginInfo loginInfo, ModelMap modelMap) {
         final Emp loginEmp = loginInfo.getEmp();
-        List<Vacate> vacateList = vacateService.getListByDepartment(loginEmp.getDepartmentId());
 
+        boolean flag = loginEmp.getId().equals(23L);
+        boolean dealBtn = false;
+        List<Vacate> vacateList;
+        if (flag) {
+            if (departmentId == null || departmentId.equals(0L)) {
+                vacateList = vacateService.findAll();
+                modelMap.put("departmentId", 0);
+            } else {
+                vacateList = vacateService.getListByDepartment(departmentId);
+                modelMap.put("departmentId", departmentId);
+            }
+            List<Department> departments = departmentService.findAll();
+            modelMap.put("departmentList", departments);
+        } else {
+            dealBtn = true;
+            vacateList = vacateService.getListByDepartment(loginEmp.getDepartmentId());
+
+        }
+
+        modelMap.put("loginId", loginEmp.getId());
+        modelMap.put("applyBtn", true);
         modelMap.put("list", vacateList);
-        modelMap.put("isMaster", true);
+        modelMap.put("dealBtn", dealBtn);
+        modelMap.put("flag", flag);
+
         return view("vacate_list");
     }
 
@@ -109,7 +164,9 @@ public class EmpController {
         final Emp loginEmp = loginInfo.getEmp();
         List<Vacate> list = vacateService.getListByEmpId(loginEmp.getId());
         modelMap.put("list", list);
-        modelMap.put("isMaster", false);
+        modelMap.put("applyBtn", true);
+        modelMap.put("dealBtn", false);
+        modelMap.put("flag", false);
         return view("vacate_list");
     }
 
@@ -135,21 +192,34 @@ public class EmpController {
     }
 
     @GetMapping("/adjustment")
-    public String adjustment(String type, LoginInfo loginInfo, ModelMap modelMap) {
+    public String adjustment(String type, Long departmentId, LoginInfo loginInfo, ModelMap modelMap) {
         final Emp loginEmp = loginInfo.getEmp();
-        Department department = departmentService.findById(loginEmp.getDepartmentId());
 
-        type = StringUtils.isEmpty(type) ? "arrive" : type;
+        boolean admin = loginEmp.getId().equals(40L);
+        modelMap.put("admin", admin);
+        boolean flag = loginEmp.getId().equals(23L) || admin;
         List<AdjustmentApply> list = null;
-        if ("arrive".equals(type)) {
-            list = adjustmentApplyService.findByArrive(loginEmp.getDepartmentId());
-            list.forEach(item -> item.setArriveName(department.getName()));
-        } else if ("origin".equals(type)) {
-            list = adjustmentApplyService.findByOrigin(loginEmp.getDepartmentId());
-            list.forEach(item -> item.setOriginName(department.getName()));
-        }
-        if (list == null) throw new TurnErrorException("空指针");
+        if (flag) {
+            if (departmentId == null || departmentId.equals(0L)) {
+                list = adjustmentApplyService.findAll();
+                modelMap.put("departmentId", 0);
+            } else {
+                list = adjustmentApplyService.findDepartmentId(departmentId);
+                modelMap.put("departmentId", departmentId);
+            }
+            List<Department> departments = departmentService.findAll();
+            modelMap.put("departmentList", departments);
+        } else {
+            departmentId = loginEmp.getDepartmentId();
+            type = StringUtils.isEmpty(type) ? "arrive" : type;
 
+            if ("arrive".equals(type)) {
+                list = adjustmentApplyService.findArriveByDepartmentId(departmentId);
+            } else if ("origin".equals(type)) {
+                list = adjustmentApplyService.findOriginByDepartmentId(departmentId);
+            }
+        }
+        modelMap.put("flag", flag);
         modelMap.put("list", list);
         modelMap.put("type", type);
         return "/department/adjustmentApply_list";
@@ -167,6 +237,32 @@ public class EmpController {
             Emp emp = new Emp();
             emp.setId(apply.getEmpId());
             emp.setDepartmentId(apply.getArrive());
+            emp.setPost(apply.getPost());
+
+            Post po = postService.findByName(apply.getPost());
+
+            Salary salary = salaryService.findByEmpId(emp.getId());
+            salary.setBase(po.getSalary());
+            salary.setComment("职位变化更改");
+            salaryService.update(salary, loginEmp.getName());
+
+            Emp byId = empService.findById(emp.getId());
+            Integer roleId = 0;
+            if (!byId.getPost().equals(emp.getPost())) {
+                if (emp.getPost().equals("经理")) {
+                    roleId = 3;
+                } else if (emp.getPost().equals("普通职员") || emp.getPost().equals("助理")) {
+                    roleId = 2;
+                }
+            }
+            if (!apply.getArrive().equals(byId.getDepartmentId())) {
+                if (apply.getArrive().equals(23L)) {
+                    roleId = 4;
+                }
+            }
+            if (roleId != 0) {
+                sysObjectService.updateEmpRoleByEmpId(emp.getId(), roleId);
+            }
 
             empService.update(emp, loginEmp.getName());
         }
@@ -177,18 +273,11 @@ public class EmpController {
     public String newAdjustApply(LoginInfo loginInfo, ModelMap modelMap) {
         final Emp loginEmp = loginInfo.getEmp();
         try {
-            List<Emp> emps = empService.findByDepartmentId(loginEmp.getDepartmentId());
-            modelMap.put("empList", emps);
             List<Department> departments = departmentService.findAll();
-            departments.removeIf(department -> {
-                if (department.getDepartmentId().equals(loginEmp.getDepartmentId())) {
-                    modelMap.put("currentDepartment", department);
-                    return true;
-                }
-                return false;
-            });
             modelMap.put("departmentList", departments);
 
+            List<Post> posts = postService.findAll();
+            modelMap.put("postList", posts);
         } catch (Exception e) {
             e.printStackTrace();
             throw new TurnErrorException();
@@ -206,11 +295,46 @@ public class EmpController {
     }
 
     @GetMapping("/train")
-    public String TrainList(LoginInfo loginInfo, ModelMap modelMap) {
-        final Emp logEmp = loginInfo.getEmp();
+    public String TrainList(Long departmentId, LoginInfo loginInfo, ModelMap modelMap) {
+        final Emp loginEmp = loginInfo.getEmp();
 
-        List<Train> list = trainService.getListByPublisher(logEmp.getId());
+        boolean flag = loginEmp.getId().equals(23L);
 
+        List<Train> list;
+
+        if (flag) {
+            if (departmentId == null || departmentId.equals(0L)) {
+                list = trainService.findAll();
+            } else {
+                Department d = departmentService.findById(departmentId);
+                list = trainService.getListByPublisher(d.getMaster());
+            }
+
+            modelMap.put("departmentId", departmentId);
+
+            List<Department> departments = departmentService.findAll();
+            modelMap.put("departmentList", departments);
+        } else {
+            list = trainService.getListByPublisher(loginEmp.getId());
+        }
+        if (departmentId == null) {
+            departmentId = 0L;
+        }
+        modelMap.put("departmentId", departmentId);
+
+        List<Long> ids = list.stream().map(item -> item.getPublisherEmp().getDepartmentId()).collect(Collectors.toList());
+        List<Department> allByIds = departmentService.findAllByIds(ids);
+
+        for (Train train : list) {
+            Long id = train.getPublisherEmp().getDepartmentId();
+            allByIds.forEach(item -> {
+                if (item.getDepartmentId().equals(id)) {
+                    train.setDepartmentName(item.getName());
+                }
+            });
+        }
+
+        modelMap.put("flag", flag);
         modelMap.put("list", list);
         return view("train_list");
     }
@@ -223,21 +347,33 @@ public class EmpController {
             modelMap.put("train", train);
             List<Long> ids = trainService.findIdsByTrainId(train.getId());
             modelMap.put("empIds", ids);
-        }
-        List<Emp> list = empService.findByDepartmentId(logEmp.getDepartmentId());
 
-        modelMap.put("empList", list);
+            Long id = train.getPublisherEmp().getDepartmentId();
+            List<Emp> list = empService.findByDepartmentId(id);
+
+            modelMap.put("empList", list);
+
+            modelMap.put("isCreate", false);
+        } else {
+            modelMap.put("isCreate", true);
+
+            List<Department> all = departmentService.findAll();
+            modelMap.put("departmentList", all);
+        }
+
+
         return view("newTrain");
     }
 
     @PostMapping("/newTrain")
     @ResponseBody
-    public Result newTrain(String type, String[] empIds, Train train, LoginInfo loginInfo) {
+    public Result newTrain(String type,Long departmentId, String[] empIds, Train train, LoginInfo loginInfo) {
         Result result = new Result();
         final Emp loginEmp = loginInfo.getEmp();
 
         if ("create".equals(type)) {
-            train.setPublisher(loginEmp.getId());
+            Department d = departmentService.findById(departmentId);
+            train.setPublisher(d.getMaster());
             trainService.save(train, loginEmp);
 
             trainService.newTrainEmp(empIds, train.getId(), loginEmp);
@@ -246,5 +382,12 @@ public class EmpController {
             trainService.changeTrainEmp(empIds, train.getId(), loginEmp);
         }
         return result;
+    }
+
+    @PostMapping("/delete")
+    @ResponseBody
+    public Result signDel(Long id) {
+        empService.signDelete(id);
+        return new Result();
     }
 }

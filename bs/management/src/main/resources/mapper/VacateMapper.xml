@@ -3,11 +3,15 @@
 <mapper namespace="com.depth.management.mapper.VacateMapper">
 
     <select id="getAllByDepartment" resultType="com.depth.management.model.Vacate">
-        select vacate.*, emp.name from vacate, emp where vacate.emp_id = emp.id and vacate.department_id=#{departmentId} order by up_time desc
+        select vacate.*, emp.name from vacate, emp where vacate.emp_id = emp.id AND emp.del_flg='0' and vacate.department_id=#{departmentId} order by up_time desc
     </select>
 
 
     <select id="getAllByEmpId" resultType="com.depth.management.model.Vacate">
-        select vacate.*, emp.name from vacate, emp where vacate.emp_id = emp.id and emp_id=#{empId} order by up_time desc
+        select vacate.*, emp.name from vacate, emp where vacate.emp_id = emp.id AND emp.del_flg='0' and emp_id=#{empId} order by up_time desc
+    </select>
+
+    <select id="getAll" resultType="com.depth.management.model.Vacate">
+        select vacate.*, emp.name from vacate, emp where vacate.emp_id = emp.id AND emp.del_flg='0' order by up_time desc
     </select>
 </mapper>

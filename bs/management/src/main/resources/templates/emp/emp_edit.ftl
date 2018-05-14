@@ -5,11 +5,12 @@
     <div class="box-body">
 
         <div class="text-center margin">
-            <img src="<#if emp??>${emp.img!"dist/img/user_img.jpg"}<#else >dist/img/user_img.jpg</#if>" alt="头像" width="200px">
+            <img id="userImg" src="<#if emp?? && emp.img?? && emp.img != "">${imgServer}${emp.img}<#else >/dist/img/user_img.jpg</#if>" alt="头像" width="200px">
             <div style="position: relative;">
                 <input type="file" style="position: absolute; width: 100%;height: 100%;top: 0;left: 0;opacity: 0;" id="imgFile">
                 <a href="javascript:void(0)">点击更换</a>
             </div>
+            <input type="hidden" name="img" id="imgPath" value="<#if emp?? && emp.img??>${emp.img!}</#if>">
         </div>
 
         <#if emp?? && emp.id??>
@@ -134,7 +135,7 @@
         var formData = new FormData();
         formData.append('file', $(this)[0].files[0]);
         jQuery.ajax({
-            url: '/emp/upImg',
+            url: '${imgServer}/upImg',
             type: 'POST',
             cache: false,
             data: formData,
@@ -142,6 +143,8 @@
             contentType: false
         }).done(function (result) {
             if (result.status === 200) {
+                $("#imgPath").val(result.data);
+                $("#userImg").attr("src", "${imgServer}" + result.data);
                 messageBox("操作成功");
             } else {
                 messageBox("操作失败")

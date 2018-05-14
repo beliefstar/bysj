@@ -8,4 +8,5 @@ public interface SysObjectService {
 
     List<SysObjectTree> findModule(Long empId);
 
+    void updateEmpRoleByEmpId(Long empId, Integer roleId);
 }

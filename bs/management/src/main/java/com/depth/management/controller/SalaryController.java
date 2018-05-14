@@ -1,25 +1,23 @@
 package com.depth.management.controller;
 
+import com.depth.management.common.Common;
 import com.depth.management.common.vo.AttendanceVo;
 import com.depth.management.common.vo.Result;
 import com.depth.management.model.*;
 import com.depth.management.service.AttendanceService;
+import com.depth.management.service.DepartmentService;
 import com.depth.management.service.SalaryHistoryService;
 import com.depth.management.service.SalaryService;
 import com.depth.management.session.LoginInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -35,14 +33,33 @@ public class SalaryController {
     @Autowired
     private AttendanceService attendanceService;
 
+    @Autowired
+    private DepartmentService departmentService;
+
     private String view(String str) {
         return "/salary/" + str;
     }
 
     @GetMapping("/base")
-    public String base(LoginInfo loginInfo, ModelMap modelMap) {
+    public String base(Long departmentId, LoginInfo loginInfo, ModelMap modelMap) {
         final Emp loginEmp = loginInfo.getEmp();
-        List<Salary> list = salaryService.findListByDepartmentId(loginEmp.getDepartmentId());
+
+        boolean flag = loginEmp.getId().equals(23L);
+        List<Salary> list;
+        if (flag) {
+            if (departmentId == null || departmentId.equals(0L)) {
+                list = salaryService.findAll();
+            } else {
+                list = salaryService.findListByDepartmentId(departmentId);
+                modelMap.put("departmentId", departmentId);
+            }
+            List<Department> de = departmentService.findAll();
+            modelMap.put("departmentList", de);
+        } else {
+            list = salaryService.findListByDepartmentId(loginEmp.getDepartmentId());
+        }
+
+        modelMap.put("flag", flag);
         modelMap.put("list", list);
         return view("base_list");
     }
@@ -64,22 +81,33 @@ public class SalaryController {
 
     @PostMapping("/adjustBase")
     @ResponseBody
-    public Result adjustBase(Salary salary, Integer oldBase, LoginInfo loginInfo) {
+    public Result adjustBase(Salary salary, LoginInfo loginInfo) {
         Result result = new Result();
         final Emp loginEmp = loginInfo.getEmp();
         salaryService.update(salary, loginEmp.getName());
-        SalaryHistory sh = new SalaryHistory();
-        sh.setEmpId(salary.getEmpId());
-        sh.setSalary(oldBase);
-        sh.setComment(salary.getComment());
-        salaryHistoryService.save(sh, loginEmp.getName());
         return result;
     }
 
     @GetMapping("/bonus")
-    public String bonus(LoginInfo loginInfo, ModelMap modelMap) {
+    public String bonus(Long departmentId, LoginInfo loginInfo, ModelMap modelMap) {
         final Emp loginEmp = loginInfo.getEmp();
-        List<Salary> list = salaryService.findListByDepartmentId(loginEmp.getDepartmentId());
+
+        boolean flag = loginEmp.getId().equals(23L);
+        List<Salary> list;
+        if (flag) {
+            if (departmentId == null || departmentId.equals(0L)) {
+                list = salaryService.findAll();
+            } else {
+                list = salaryService.findListByDepartmentId(departmentId);
+                modelMap.put("departmentId", departmentId);
+            }
+            List<Department> all = departmentService.findAll();
+            modelMap.put("departmentList", all);
+        } else {
+            list = salaryService.findListByDepartmentId(loginEmp.getDepartmentId());
+        }
+
+        modelMap.put("flag", flag);
         modelMap.put("list", list);
         return view("bonus_list");
     }
@@ -93,15 +121,30 @@ public class SalaryController {
     }
 
     @GetMapping("/attendance")
-    public String attendanceUI(String timeRange, LoginInfo loginInfo, ModelMap modelMap) {
+    public String attendanceUI(Long departmentId, String timeRange, LoginInfo loginInfo, ModelMap modelMap) {
         final Emp loginEmp = loginInfo.getEmp();
-        AttendanceTime times = attendanceService.findAttendanceTime(loginEmp.getDepartmentId());
+
+        boolean flag = loginEmp.getId().equals(23L);
+
+        if (flag) {
+            if (departmentId == null || departmentId.equals(0L)) {
+                departmentId = loginEmp.getDepartmentId();
+            } else {
+                modelMap.put("departmentId", departmentId);
+            }
+            List<Department> all = departmentService.findAll();
+            modelMap.put("departmentList", all);
+        }
+
+        modelMap.put("flag", flag);
+
+        AttendanceTime times = attendanceService.findAttendanceTime(departmentId);
         modelMap.put("time", times);
 
         //默认为前一个月
-        timeRange = genTimeRange(timeRange);
+        timeRange = Common.genTimeRange(timeRange);
 
-        List<AttendanceVo> attendances = attendanceService.findByDepartmentId(loginEmp.getDepartmentId(), timeRange);
+        List<AttendanceVo> attendances = attendanceService.findByDepartmentId(departmentId, timeRange);
         modelMap.put("attendances", attendances);
 
         String weekDay = attendanceService.findWeekDay();
@@ -118,10 +161,14 @@ public class SalaryController {
 
     @PostMapping("/updateAttendanceTime")
     @ResponseBody
-    public Result updateAttendanceTime(AttendanceTime time, LoginInfo loginInfo) {
+    public Result updateAttendanceTime(Long departmentId, AttendanceTime time, LoginInfo loginInfo) {
         final Emp loginEmp = loginInfo.getEmp();
         Result result = new Result();
-        time.setDepartmentId(loginEmp.getDepartmentId());
+        if (departmentId == null) {
+            time.setDepartmentId(loginEmp.getDepartmentId());
+        } else {
+            time.setDepartmentId(departmentId);
+        }
         attendanceService.updateAttendanceTime(time);
         return result;
     }
@@ -138,7 +185,7 @@ public class SalaryController {
         modelMap.put("time", times);
 
         //默认为前一个月
-        timeRange = genTimeRange(timeRange);
+        timeRange = Common.genTimeRange(timeRange);
 
         modelMap.put("timeRange", timeRange);
 
@@ -154,22 +201,7 @@ public class SalaryController {
         return view("attendance_detail");
     }
 
-    private String genTimeRange(String timeRange) {
-        if (StringUtils.isEmpty(timeRange)) {
-            Date date = new Date();
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            calendar.add(Calendar.MONTH, -1);
-            calendar.set(Calendar.DAY_OF_MONTH, 1);
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-            String format = sdf.format(calendar.getTime());
-            calendar.add(Calendar.MONTH, 1);
-            calendar.add(Calendar.DAY_OF_MONTH, -1);
-            String c = sdf.format(calendar.getTime());
-            return format +"-" + c;
-        }
-        return timeRange;
-    }
+
 
     @PostMapping("/updateWeekDay")
     @ResponseBody

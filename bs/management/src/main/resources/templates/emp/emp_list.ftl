@@ -3,7 +3,17 @@
 <#--********************************************-->
 <div class="box box-success load-content">
     <div class="box-header">
-
+        <#if isMaster>
+            选择查看部门：
+        <div class="form-group" style="width: 200px">
+            <select name="departmentId" id="departmentSel" class="form-control">
+                <option value="0" >全部</option>
+                <#list departmentList as d>
+                    <option value="${d.departmentId}" <#if departmentId?? && departmentId == d.departmentId>selected</#if>>${d.name}</option>
+                </#list>
+            </select>
+        </div>
+        </#if>
     </div>
     <!-- /.box-header -->
     <div class="box-body">
@@ -13,6 +23,7 @@
                 <th>编号</th>
                 <th>姓名</th>
                 <th>性别</th>
+                <th>年龄</th>
                 <th>职位</th>
                 <th>入职时间</th>
                 <th>操作</th>
@@ -23,12 +34,16 @@
             <tr>
                 <td>${item_index}</td>
                 <td>${item.name}</td>
+                <td>${item.gender}</td>
                 <td>${item.age}</td>
                 <td>${item.post}</td>
                 <td>${item.joinTime?string('yyyy-MM-dd')}</td>
                 <td>
                     <button class="btn btn-xs btn-primary" onclick="showLab('/emp/view?id=${item.id}')"><i class="fa fa-search"></i>查看</button>
+                    <#if isMaster>
                     <button class="btn btn-xs btn-primary" onclick="showLab('/emp/edit?id=${item.id}')"><i class="fa fa-edit"></i>编辑</button>
+                    <button class="btn btn-xs btn-primary" onclick="deleteEmp('${item.id}')"><i class="fa fa-edit"></i>离职</button>
+                    </#if>
                 </td>
             </tr>
             </#list>
@@ -42,6 +57,25 @@
 <script src="/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="/plugins/datatables/dataTables.bootstrap.min.js"></script>
 <script>
+
+    function deleteEmp(_id) {
+        var flag = confirm("确定离职？");
+        if (flag) {
+            jQuery.ajax({
+                url: "/emp/delete",
+                type: "POST",
+                data: {
+                    id: _id
+                }
+            }).done(function (res) {
+                if (res.status === 200) {
+                    messageBox("操作成功");
+                } else {
+                    messageBox("操作失败");
+                }
+            })
+        }
+    }
 
     $("#table${uuid}").DataTable({
         "language": {
@@ -59,6 +93,12 @@
             "search": "搜索:",
             "zeroRecords": "无相关数据"
         }
+    });
+
+    $("#departmentSel").change(function () {
+        var id = $(this).val();
+
+        showLab('/emp/detail?departmentId=' + id);
     });
 
 </script>

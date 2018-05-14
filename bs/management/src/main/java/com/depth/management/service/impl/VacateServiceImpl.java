@@ -131,4 +131,24 @@ public class VacateServiceImpl implements VacateService {
             throw new ServiceException(e);
         }
     }
+
+    @Override
+    public List<Vacate> findAll() {
+        return vacateMapper.getAll();
+    }
+
+    @Override
+    public List<Vacate> findListByEmpIds(List<Long> ids) {
+        Example example = new Example(Vacate.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andIn("empId", ids);
+        List<Vacate> list;
+        try {
+            list = vacateMapper.selectByExample(example);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException(e);
+        }
+        return list;
+    }
 }

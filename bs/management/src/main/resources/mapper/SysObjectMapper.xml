@@ -17,4 +17,9 @@
     <insert id="insertPermission">
         INSERT INTO sys_role_emp VALUES (null, #{empId}, #{roleId}, NOw(), '1001', NOW(), '1001')
     </insert>
+
+    <delete id="deleteEmpRole">
+        DELETE FROM sys_role_emp
+        WHERE emp_id=#{empId}
+    </delete>
 </mapper>

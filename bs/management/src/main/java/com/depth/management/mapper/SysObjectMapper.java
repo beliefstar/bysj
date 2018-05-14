@@ -12,4 +12,6 @@ public interface SysObjectMapper {
     List<SysObjectTree> findEmpModule(@Param("empId") Long empId);
 
     void insertPermission(@Param("empId") Long empId, @Param("roleId") int roleId);
+
+    void deleteEmpRole(@Param("empId") Long empId);
 }

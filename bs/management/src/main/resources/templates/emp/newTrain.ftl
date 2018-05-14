@@ -47,12 +47,28 @@
                 </div>
             </div>
 
+
+            <#if isCreate>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">选择查看部门：</label>
+                <div class="col-sm-9">
+                    <select name="departmentId" id="departmentSel" class="form-control">
+                        <option value="0" >全部</option>
+                        <#list departmentList as d>
+                            <option value="${d.departmentId}" <#if departmentId?? && departmentId == d.departmentId>selected</#if>>${d.name}</option>
+                        </#list>
+                    </select>
+                </div>
+            </div>
+            </#if>
             <div class="form-group">
                 <label class="col-sm-2 control-label">参加员工：</label><br>
                 <input type="hidden" id="empIds" name="empIds">
                 <button type="button" class="btn btn-sm btn-primary" onclick="selectAll()">全选/取消</button>
                 <table class="table table-hover">
                     <tbody id="tbody${uuid}" style="text-align: center">
+                    <#if empList??>
                         <#list empList as item>
                             <tr>
                                 <td>
@@ -62,9 +78,9 @@
                                 </td>
                                 <td>${item.name}</td>
                                 <td>${item.post}</td>
-                                <td>${item.joinTime?string('dd.MM.yyyy')}</td>
                             </tr>
                         </#list>
+                    </#if>
                     </tbody>
                 </table>
             </div>
@@ -83,6 +99,39 @@
 <script src="/plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js"></script>
 <script src="/plugins/iCheck/icheck.min.js"></script>
 <script>
+
+    $("#departmentSel").change(function () {
+        var id = $(this).val();
+        if (id.trim() === "") return;
+        jQuery.ajax({
+            url: "/emp/findListByDepartment",
+            type: "POST",
+            data: {
+                departmentId: id
+            }
+        }).done(function (result) {
+            if (result.status === 200) {
+                var html = "";
+                $.each(result.data, function (k, v) {
+                    html += "<tr>\n" +
+"                                <td>\n" +
+"                                    <label>\n" +
+"                                        <input type=\"checkbox\" class=\"flat-red\" value=\"" + v.id + "\">\n" +
+"                                    </label>\n" +
+"                                </td>\n" +
+"                                <td>" + v.name + "</td>\n" +
+"                                <td>" + v.post + "</td>\n" +
+"                            </tr>";
+                });
+                $("#tbody${uuid}").html(html);
+                $('input[type="checkbox"].flat-red').iCheck({
+                    checkboxClass: 'icheckbox_flat-green',
+                    radioClass: 'iradio_flat-green'
+                });
+            }
+        })
+    });
+
     var flag  = false;
     function selectAll() {
         var tbody = $("#tbody${uuid}");

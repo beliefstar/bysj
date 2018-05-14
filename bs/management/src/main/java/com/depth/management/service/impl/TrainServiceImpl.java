@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TrainServiceImpl implements TrainService {
@@ -154,5 +155,22 @@ public class TrainServiceImpl implements TrainService {
             throw new ServiceException(e);
         }
         return ids;
+    }
+
+    @Override
+    public List<Train> findAll() {
+        List<Train> trains = trainMapper.selectAll();
+
+        List<Long> ids = trains.stream().map(Train::getPublisher).collect(Collectors.toList());
+
+        List<Emp> emps = empService.findByIds(ids);
+        for (Train train : trains) {
+            for (Emp emp : emps) {
+                if (train.getPublisher().equals(emp.getId())) {
+                    train.setPublisherEmp(emp);
+                }
+            }
+        }
+        return trains;
     }
 }
